@@ -6,6 +6,7 @@ package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.dao.entity.Account;
 import com.xushicao.accounting.dao.mapper.AccountMapper;
+import com.xushicao.accounting.dao.mapper.SequenceMapper;
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
@@ -30,31 +31,35 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
     @Autowired
     AccountMapper accountMapper; //自动注入accountMapper对象
 
+    @Autowired
+    SequenceMapper sequenceMapper;
+
     /**
      * 开户方法的重写<br/>
      * <p>
      * 完成开户
      *
      * @param openAccountReq 开户请求
-     * @return
+     * @return  开户结果
      */
     @Override
     public AccountManageResult openAccount(OpenAccountReq openAccountReq) {
 
         AccountManageResult accountManageResult = new AccountManageResult();//建立一个返回对象
         // 1、参数校验,判断账户类型为内部户时，账户名是否为空
-        if (openAccountReq.getAccountType() == "03") {
-            if (openAccountReq.getAccountName() == null) {
-                accountManageResult.setErrorCode("01");//设置错误码
-                accountManageResult.setSuccess(false);
-                return accountManageResult;
+        if(openAccountReq!=null) {
+            if (openAccountReq.getAccountType().equals( "03")) {
+                if (openAccountReq.getAccountName() == null) {
+                    accountManageResult.setErrorCode("01");//设置错误码
+                    accountManageResult.setSuccess(false);
+                    return accountManageResult;
+                }
             }
         }
-
         // 2、生成账号
         String accountType = openAccountReq.getAccountType();//获取账号类型
         String accountCurrency = openAccountReq.getCurrency();//获取账号币种
-        String serialNo=Long.toString(accountMapper.getSerialNo()); //获取序列号sequenceMapper.getNextVal("my_sequence")
+        String serialNo=Long.toString(sequenceMapper.getNextVal("account_seq")); //获取序列号sequenceMapper.getNextVal("my_sequence")
         String accountNo = "2000" + accountType + serialNo + accountCurrency;
 
         // 3、数据库插入

@@ -22,11 +22,13 @@ public class OpenAccountReq {
 
     /**
      * 账户类型
-     * <li>01-个人账户</li>
-     * <li>02-对公账户</li>
-     * <li>03-内部户</li>
+     * <li>0-个人账户</li>
+     * <li>1-对公账户</li>
+     * <li>2-内部户</li>
      */
+
     private String accountType;
+
 
     /**
      *币种
@@ -34,9 +36,8 @@ public class OpenAccountReq {
      * <li>002-美元</li>
      * <li>003-欧元</li>
      */
-    private String currency;
 
-
+    private String Currency;
 
     public String getAccountName() {
         return accountName;
@@ -55,10 +56,10 @@ public class OpenAccountReq {
     }
 
     public String getCurrency() {
-        return currency;
+        return Currency;
     }
 
     public void setCurrency(String currency) {
-        this.currency = currency;
+        Currency = currency;
     }
 }

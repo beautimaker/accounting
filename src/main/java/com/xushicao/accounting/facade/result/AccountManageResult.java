@@ -1,16 +1,13 @@
 /**
- * xxx.com Inc.
- *
+ * Shichao.com Inc
+ * Copyright (c) 2004-2024 All Rights Reserved.
  */
 package com.xushicao.accounting.facade.result;
 
 /**
- * 账户结果类
  *
- * <p>作为开户方法的返回值，返回的账户的开户结果<p/>
- *
- * @author  Shichao.Xu
- * @version  001
+ *@author Shichao.xu
+ *@version $ AccountManageResult , V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
 public class AccountManageResult {
 

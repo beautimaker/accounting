@@ -1,16 +1,16 @@
 /**
- * xxx.com Inc.
- *
+ * Shichao.com Inc
+ * Copyright (c) 2004-2024 All Rights Reserved.
  */
 package com.xushicao.accounting.facade.req;
 
 
 /**
- *开户请求类
- *<p>保存用户信息，，用于之后结果对象的创建</p>
- *
- * @author Shichao.Xu
- * @version 001
+ * 用户请求类
+ *属性：别名、类型、币种
+ *方法：get、set方法
+ *@author Shichao.xu
+ *@version $ OpenAccountReq, V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
 
 public class OpenAccountReq {
@@ -22,30 +22,21 @@ public class OpenAccountReq {
 
     /**
      * 账户类型
-     * <li>0-个人账户</li>
-     * <li>1-对公账户</li>
-     * <li>2-内部户</li>
+     * <li>01-个人账户</li>
+     * <li>02-对公账户</li>
+     * <li>03-内部户</li>
      */
-
     private String accountType;
 
-
     /**
-     *币种
-     * <li>001-人民币</li>
-     * <li>002-美元</li>
-     * <li>003-欧元</li>
+     * 币种枚举类<br/>
+     * 156-人民币<br/>
+     * 840-美元<<br/>
+     * 978-欧元<br/>
      */
+   private String currency;
 
-    private String Currency;
 
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
 
     public String getAccountType() {
         return accountType;
@@ -56,10 +47,21 @@ public class OpenAccountReq {
     }
 
     public String getCurrency() {
-        return Currency;
+        return currency;
     }
 
     public void setCurrency(String currency) {
-        Currency = currency;
+        this.currency = currency;
     }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+
+
 }

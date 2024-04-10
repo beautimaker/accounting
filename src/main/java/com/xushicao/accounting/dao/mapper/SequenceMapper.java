@@ -1,12 +1,16 @@
+/**
+ * Shichao.com Inc
+ * Copyright (c) 2004-2024 All Rights Reserved.
+ */
 package com.xushicao.accounting.dao.mapper;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
 /**
- *  序列号生成接口
- *  通过数据库生成序列号
+ * 序列生成接口<br/>
+ * 生成序列号
+ *@author Shichao.xu
+ *@version $SequenceMapper, V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
 @Mapper
 public interface SequenceMapper {

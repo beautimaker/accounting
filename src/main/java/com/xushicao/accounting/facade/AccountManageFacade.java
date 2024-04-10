@@ -1,20 +1,18 @@
 /**
- * xxx.com Inc.
- *
+ * Shichao.com Inc
+ * Copyright (c) 2004-2024 All Rights Reserved.
  */
 package com.xushicao.accounting.facade;
-
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
 
 /**
- *账户管理接口<br/>
- *<br/>包含如下方法
- *<br/> 开户：实现账户开户功能
- *
- * @author Shichao.Xu
- * @version 001
+ * 开户接口<br/>
+ *方法：开户方法
+ *@author Shichao.xu
+ *@version $ AccountManageFacade, V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
+
 public interface AccountManageFacade {
     /**
      *根据开户请求对象，实现开户功能
@@ -22,4 +20,8 @@ public interface AccountManageFacade {
      * @return 开户结果
      */
     AccountManageResult openAccount(OpenAccountReq openAccountReq);
+
+
+
+
 }

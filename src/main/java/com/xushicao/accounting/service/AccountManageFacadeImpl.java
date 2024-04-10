@@ -53,24 +53,31 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 
         AccountManageResult accountManageResult = new AccountManageResult();//建立一个返回对象
 
-        // 1、参数校验,判断账户类型为内部户时，账户名是否为空
+        // 1、参数校验
+        //判断开户请求对象是否为空
         if (openAccountReq != null) {
+            //判断币种和账户类型是否不在给定范围内
             if (AccountTypeEnum.getByCode(openAccountReq.getAccountType()) != null
                     && AccountCurrencyEnum.getByCode(openAccountReq.getCurrency()) != null) {
+                //判断账户类型为内部户时，账户名是否为空
                 if (openAccountReq.getAccountType().equals("03")) {
                     if (openAccountReq.getAccountName() == null) {
-                        accountManageResult.setErrorCode("01");
+                        accountManageResult.setErrorCode("02");
                         accountManageResult.setSuccess(false);
-                    } else {
-                        accountManageResult.setSuccess(true);
+                        return accountManageResult;
                     }
                 }
 
+                accountManageResult.setSuccess(true);
             } else {
-                accountManageResult.setErrorCode("01");
+                accountManageResult.setErrorCode("03");
                 accountManageResult.setSuccess(false);
+                return accountManageResult;
             }
-
+        } else {
+            accountManageResult.setErrorCode("01");
+            accountManageResult.setSuccess(false);
+            return accountManageResult;
         }
 
         // 2、生成账号

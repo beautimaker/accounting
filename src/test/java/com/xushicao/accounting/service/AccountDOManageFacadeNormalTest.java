@@ -27,6 +27,10 @@ import org.springframework.util.Assert;
 @SpringBootTest
 public class AccountDOManageFacadeNormalTest {
 
+    /**
+     * 开户映射接口
+     * 实现与数据库相关操作
+     */
     @Autowired
     AccountMapper accountMapper;
 
@@ -41,6 +45,7 @@ public class AccountDOManageFacadeNormalTest {
      * 开户测试防方法
      * 实现开户测试，返回测试结果
      */
+
     @Test
     void testOpenAccount() {
 
@@ -65,6 +70,7 @@ public class AccountDOManageFacadeNormalTest {
         result = accountManageFacade.openAccount(openAccountReq);
         Assert.isTrue(result.isSuccess(), "case2:调用服务结果返回失败");
         Assert.notNull(result.getAccountNo(), "case2:返回账户为空");
+
 
         //case3: 内部欧元账户正常开户
         openAccountReq.setAccountType("03");

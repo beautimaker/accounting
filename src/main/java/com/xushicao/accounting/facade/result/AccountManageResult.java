@@ -5,9 +5,8 @@
 package com.xushicao.accounting.facade.result;
 
 /**
- *
- *@author Shichao.xu
- *@version $ AccountManageResult , V0.1 2024/4/8 12:56 Shichao.xu Exp $
+ * @author Shichao.xu
+ * @version $ AccountManageResult , V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
 public class AccountManageResult {
 
@@ -19,9 +18,10 @@ public class AccountManageResult {
 
     /**
      * 错误码
-     *<li>01-内部户别名为空</li>
+     * <li>01-用户请求为空</li>
+     * <li>02-内部户别名为空</li>
+     * <li>03-用户类型或者币种不在给定范围内</>
      */
-
     private String errorCode;
 
     /**

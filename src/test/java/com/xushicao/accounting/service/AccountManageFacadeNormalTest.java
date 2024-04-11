@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
  * @version $ AccountManageFacadeNormalTest, V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
 @SpringBootTest
-public class AccountDOManageFacadeNormalTest {
+public class AccountManageFacadeNormalTest {
 
     /**
      * 开户映射接口

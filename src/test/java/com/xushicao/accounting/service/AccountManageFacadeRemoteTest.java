@@ -37,17 +37,15 @@ public class AccountManageFacadeRemoteTest {
      * 模拟http发送请求
      */
     private MockMvc mockMvc;
-    /**
-     *
-     */
-    @Autowired
-    private WebApplicationContext webApplicationContext;
 
 
     /**
      * web应用配置接口对象
      * 实现web应用的相应配置
      */
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
 
     /**
      * mockMvc启动函数

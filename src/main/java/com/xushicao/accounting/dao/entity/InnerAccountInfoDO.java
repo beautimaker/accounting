@@ -2,40 +2,22 @@
  * Shichao.com Inc
  * Copyright (c) 2004-2024 All Rights Reserved.
  */
-package com.xushicao.accounting.facade.req;
+package com.xushicao.accounting.dao.entity;
 
+import java.util.Date;
 
 /**
- * 用户请求类
- * 属性：别名、类型、币种
- * 方法：get、set方法
+ * 内部户扩展表实体类
  *
  * @author Shichao.xu
- * @version $ OpenAccountReq, V0.1 2024/4/8 12:56 Shichao.xu Exp $
+ * @version $ InnerAccountInfoDO, V0.1 2024/4/11 19:53 Shichao.xu Exp $
  */
 
-public class OpenAccountReq {
-
+public class InnerAccountInfoDO {
     /**
-     * 账号别名，选填，内部户（账户类型为03）时必填
+     * 内部户账号
      */
-    private String accountName;
-
-    /**
-     * 账户类型
-     * <li>01-个人账户</li>
-     * <li>02-对公账户</li>
-     * <li>03-内部户</li>
-     */
-    private String accountType;
-
-    /**
-     * 币种枚举类<br/>
-     * 156-人民币<br/>
-     * 840-美元<<br/>
-     * 978-欧元<br/>
-     */
-    private String currency;
+    private String accountNo;
 
     /**
      * 科目
@@ -57,6 +39,23 @@ public class OpenAccountReq {
      */
     private String relationInstId;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    private Date updateTime;
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
+    }
 
     public String getTitleCode() {
         return titleCode;
@@ -90,29 +89,19 @@ public class OpenAccountReq {
         this.relationInstId = relationInstId;
     }
 
-    public String getAccountType() {
-        return accountType;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public String getCurrency() {
-        return currency;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
-
-
 }

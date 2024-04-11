@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * 远程开户测试类
- * 使用mcckmvc实现远程开户测试
+ * 使用mockmvc实现远程开户测试
  *
  * @author Shichao.xu
  * @version $ AccountManageFacadeRemoteTest, V0.1 2024/4/11 10:06 Shichao.xu Exp $
@@ -89,8 +89,10 @@ public class AccountManageFacadeRemoteTest {
                 .andDo(MockMvcResultHandlers.print());
 
 
-        //case3:内部欧元账户原远程正常开户
-        requsetBody = "{\"accountName\":\"lijiangwei\",\"accountType\":\"03\",\"currency\":\"978\"}";
+        //case3:内部欧元账户远程正常开户
+        requsetBody = "{\"accountName\":\"lijiangwei\",\"accountType\":\"03\",\"currency\":\"9788\",\"titleCode\"" +
+                ":\"资产类科目\",\"reconInst\":\"中国农业银行\",\"relationInstId\":\"PBOC\",\"RelationCode\":\"" +
+                "1234567891234567891234567912345678912345678912345678912345678912345678910\"}";
 
         mockMvc.perform(post("/account")
                         .contentType(MediaType.APPLICATION_JSON).content(requsetBody)

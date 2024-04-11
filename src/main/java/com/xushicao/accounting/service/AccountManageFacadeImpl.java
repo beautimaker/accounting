@@ -6,7 +6,9 @@
 package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.dao.entity.AccountDO;
+import com.xushicao.accounting.dao.entity.InnerAccountInfoDO;
 import com.xushicao.accounting.dao.mapper.AccountMapper;
+import com.xushicao.accounting.dao.mapper.InnerAccountInfoMapper;
 import com.xushicao.accounting.dao.mapper.SequenceMapper;
 import com.xushicao.accounting.domain.enums.AccountCurrencyEnum;
 import com.xushicao.accounting.domain.enums.AccountTypeEnum;
@@ -42,6 +44,13 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Autowired
     private SequenceMapper sequenceMapper;
+
+    /**
+     * 内部会扩展表映射接口
+     * 用于实现插入内部户扩展表数据到mysql
+     */
+    @Autowired
+    private InnerAccountInfoMapper innerAccountInfoMapper;
 
     /**
      * 开户方法的重写<br/>
@@ -87,8 +96,14 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
         String accountNo = getAccountNo(openAccountReq);
 
         // 3、数据库插入
-        AccountDO accountdo = buildAccount(accountNo, openAccountReq);
-        accountMapper.insert(accountdo);
+        InnerAccountInfoDO innerAccountInfoDO = null;
+        AccountDO accountDO = buildAccount(accountNo, openAccountReq);
+        if (openAccountReq.getAccountType().equals("03")) {
+            innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
+            innerAccountInfoMapper.insert(innerAccountInfoDO);
+        }
+        accountMapper.insert(accountDO);
+
 
         // 4、返回开户结果
         accountManageResult.setAccountNo(accountNo);
@@ -106,7 +121,6 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
     private String getAccountNo(OpenAccountReq openAccountReq) {
 
         String accountType = openAccountReq.getAccountType();//获取账号类型
-        AccountTypeEnum.getByCode(accountType);
         String accountCurrency = openAccountReq.getCurrency();//获取账号币种
         String serialNo = Long.toString(sequenceMapper.getNextVal("account_seq")); //获取序列号sequenceMapper.getNextVal("my_sequence")
         String accountNo = "2000" + accountType + serialNo + accountCurrency;
@@ -133,6 +147,26 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
         accountdo.setCurrency(openAccountReq.getCurrency());
         return accountdo;
 
+    }
+
+    /**
+     * 内部户扩展表建立方法
+     * 通过传入参数建立内部户扩展表实体类
+     *
+     * @param accountNo      账号
+     * @param openAccountReq 开户请求对象
+     * @return 内部户扩展表实体类
+     */
+    private InnerAccountInfoDO buildInnerAccountInfo(String accountNo, OpenAccountReq openAccountReq) {
+
+        InnerAccountInfoDO innerAccountInfoDO = new InnerAccountInfoDO();
+        innerAccountInfoDO.setTitleCode(openAccountReq.getTitleCode());
+        innerAccountInfoDO.setRelationInstId(openAccountReq.getRelationInstId());
+        innerAccountInfoDO.setRelationCode(openAccountReq.getRelationCode());
+        innerAccountInfoDO.setReconInst(openAccountReq.getReconInst());
+        innerAccountInfoDO.setAccountNo(accountNo);
+
+        return innerAccountInfoDO;
     }
 
 

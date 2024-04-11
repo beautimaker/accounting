@@ -15,6 +15,7 @@ import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 开户接口实现类
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Service;
  * @author Shichao.xu
  * @version $ AccountManageFacadeImpl, V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
-@Service
+@RestController
+@RequestMapping("/")
 public class AccountManageFacadeImpl implements AccountManageFacade {
 
     /**
@@ -49,7 +51,8 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      * @return 开户结果
      */
     @Override
-    public AccountManageResult openAccount(OpenAccountReq openAccountReq) {
+    @PostMapping("account")
+    public AccountManageResult openAccount(@RequestBody OpenAccountReq openAccountReq) {
 
         AccountManageResult accountManageResult = new AccountManageResult();//建立一个返回对象
 

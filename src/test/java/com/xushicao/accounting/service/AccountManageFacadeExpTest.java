@@ -4,7 +4,6 @@
  */
 package com.xushicao.accounting.service;
 
-import com.xushicao.accounting.dao.mapper.AccountMapper;
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
@@ -28,7 +27,7 @@ public class AccountManageFacadeExpTest {
      */
     @Autowired
     AccountManageFacade accountManageFacade;
-    
+
 
     /**
      * 开户异常场景测试方法

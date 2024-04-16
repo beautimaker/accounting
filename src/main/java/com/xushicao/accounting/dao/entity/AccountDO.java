@@ -15,22 +15,49 @@ import java.util.Date;
  */
 
 public class AccountDO {
+    /**
+     * 账号
+     */
     private String accountNo;
 
+    /**
+     * 账户名
+     */
     private String accountName;
 
+    /**
+     * 账户类型
+     */
     private String accountType;
 
+    /**
+     * 账户状态
+     */
     private String status;
 
+    /**
+     * 存款
+     */
     private long balance;
 
+    /**
+     * 修改时间
+     */
     private Date lastTransTime;
 
+    /**
+     * 创建时间
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     */
     private Date updateTime;
 
+    /**
+     * 币种
+     */
     private String currency;
 
     public String getAccountNo() {

@@ -8,9 +8,12 @@ import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
+
 
 /**
  * 开户异常场景测试
@@ -45,7 +48,7 @@ public class AccountManageFacadeExpTest {
 
         Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case1:返回账户存在");
-        Assert.isTrue(result.getErrorCode().equals("01"), "异常类型不为请求对象为空");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100003101"), "异常类型不为请求对象为空");
 
 
         // case2: 账户类型为内部户时账户名为空异常
@@ -55,7 +58,7 @@ public class AccountManageFacadeExpTest {
         result = accountManageFacade.openAccount(openAccountReq);
         Assert.isTrue(!result.isSuccess(), "case2:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case2:返回账户存在");
-        Assert.isTrue(result.getErrorCode().equals("02"), "异常类型不为账户类型为内部户时账户名为空");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100003101"), "异常类型不为账户类型为内部户时账户名为空");
 
 
         //case3:账户类型或币种参数不在给定范围内
@@ -66,7 +69,7 @@ public class AccountManageFacadeExpTest {
         result = accountManageFacade.openAccount(openAccountReq);
         Assert.isTrue(!result.isSuccess(), "case3:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case3:返回账户存在");
-        Assert.isTrue(result.getErrorCode().equals("03"), "异常类型不为账户类型或币种参数不在给定范围");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100003101"), "异常类型不为账户类型或币种参数不在给定范围");
 
 
     }

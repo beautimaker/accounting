@@ -5,19 +5,23 @@
 
 package com.xushicao.accounting.service;
 
+import com.xushicao.accounting.common.AccountingConstants;
 import com.xushicao.accounting.dao.entity.AccountDO;
 import com.xushicao.accounting.dao.entity.InnerAccountInfoDO;
 import com.xushicao.accounting.dao.mapper.AccountMapper;
 import com.xushicao.accounting.dao.mapper.InnerAccountInfoMapper;
 import com.xushicao.accounting.dao.mapper.SequenceMapper;
-import com.xushicao.accounting.domain.enums.AccountCurrencyEnum;
-import com.xushicao.accounting.domain.enums.AccountTypeEnum;
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
+import com.xushicao.accounting.log.DigestLogAnnotated;
+import com.xushicao.accounting.template.TradeCallBack;
+import com.xushicao.accounting.template.TradeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import static com.xushicao.accounting.util.ParaCheckUtil.*;
 
 /**
  * 开户接口实现类
@@ -61,53 +65,62 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("account")
+    @DigestLogAnnotated(AccountingConstants.QUERY_DIGEST_LOG)
     public AccountManageResult openAccount(@RequestBody OpenAccountReq openAccountReq) {
 
-        AccountManageResult accountManageResult = new AccountManageResult();//建立一个返回对象
+        final AccountManageResult accountManageResult = new AccountManageResult();//建立一个返回对象
 
-        // 1、参数校验
-        //判断开户请求对象是否为空
-        if (openAccountReq != null) {
-            //判断币种和账户类型是否不在给定范围内
-            if (AccountTypeEnum.getByCode(openAccountReq.getAccountType()) != null
-                    && AccountCurrencyEnum.getByCode(openAccountReq.getCurrency()) != null) {
-                //判断账户类型为内部户时，账户名是否为空
+        TradeTemplate.trade(accountManageResult, new TradeCallBack() {
+            @Override
+            public void checkParameter() {
+
+                checkParamNotNull(openAccountReq, USER_REQUEST);
+
+                checkParamNotNull(openAccountReq.getAccountType(), ACCOUNT_TYPE);
+                checkParaNotBlank(openAccountReq.getAccountType(), ACCOUNT_TYPE);
+                checkParaMatch(openAccountReq.getAccountType(), ACCOUNT_TYPE);
+
+
+                checkParamNotNull(openAccountReq.getCurrency(), ACCOUNT_CURRENCY);
+                checkParaNotBlank(openAccountReq.getCurrency(), ACCOUNT_CURRENCY);
+                checkParaMatch(openAccountReq.getCurrency(), ACCOUNT_CURRENCY);
+
                 if (openAccountReq.getAccountType().equals("03")) {
-                    if (openAccountReq.getAccountName() == null) {
-                        accountManageResult.setErrorCode("02");
-                        accountManageResult.setSuccess(false);
-                        return accountManageResult;
-                    }
+                    checkParamNotNull(openAccountReq.getAccountName(), ACCOUNT_NAME);
+                    checkParaNotBlank(openAccountReq.getAccountName(), ACCOUNT_NAME);
                 }
 
-                accountManageResult.setSuccess(true);
-            } else {
-                accountManageResult.setErrorCode("03");
-                accountManageResult.setSuccess(false);
-                return accountManageResult;
             }
-        } else {
-            accountManageResult.setErrorCode("01");
-            accountManageResult.setSuccess(false);
-            return accountManageResult;
-        }
 
-        // 2、生成账号
-        String accountNo = getAccountNo(openAccountReq);
+            @Override
+            @Transactional
+            public void doTrade() {
 
-        // 3、数据库插入
-        InnerAccountInfoDO innerAccountInfoDO = null;
-        AccountDO accountDO = buildAccount(accountNo, openAccountReq);
-        if (openAccountReq.getAccountType().equals("03")) {
-            innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
-            innerAccountInfoMapper.insert(innerAccountInfoDO);
-        }
-        accountMapper.insert(accountDO);
+                // 2、生成账号
+                String accountNo = getAccountNo(openAccountReq);
+
+                // 3、数据库插入
+                InnerAccountInfoDO innerAccountInfoDO = null;
+                AccountDO accountDO = buildAccount(accountNo, openAccountReq);
+                if (openAccountReq.getAccountType().equals("03")) {
+                    innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
+                    innerAccountInfoMapper.insert(innerAccountInfoDO);
+                }
+                accountMapper.insert(accountDO);
 
 
-        // 4、返回开户结果
-        accountManageResult.setAccountNo(accountNo);
-        accountManageResult.setSuccess(true);
+                // 4、返回开户结果
+                accountManageResult.setAccountNo(accountNo);
+                accountManageResult.setSuccess(true);
+
+            }
+
+//            @Override
+//            public QueryDigestLog buildDigestLog() {
+//                return new QueryDigestLog(openAccountReq);
+//            }
+        });
+
         return accountManageResult;
     }
 

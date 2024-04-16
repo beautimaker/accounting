@@ -77,7 +77,7 @@ public class AccountManageFacadeNormalTest {
         openAccountReq.setCurrency("978");
         openAccountReq.setAccountName("lijiangwei");
         openAccountReq.setRelationCode("1234567891234567891234567912345678912345678912345678912345678912345678910");
-        openAccountReq.setTitleCode("资产类科目");
+        openAccountReq.setTitleCode("1001");
         openAccountReq.setReconInst("中国农业银行");
         openAccountReq.setRelationInstId("PBOC");
 

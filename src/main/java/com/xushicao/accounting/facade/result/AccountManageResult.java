@@ -4,6 +4,9 @@
  */
 package com.xushicao.accounting.facade.result;
 
+
+import com.xushicao.accounting.common.ErrorContext;
+
 /**
  * @author Shichao.xu
  * @version $ AccountManageResult , V0.1 2024/4/8 12:56 Shichao.xu Exp $
@@ -17,12 +20,12 @@ public class AccountManageResult {
     private String accountNo;
 
     /**
-     * 错误码
+     * 错误码上下文
      * <li>01-用户请求为空</li>
      * <li>02-内部户别名为空</li>
      * <li>03-用户类型或者币种不在给定范围内</>
      */
-    private String errorCode;
+    private ErrorContext errorContext;
 
     /**
      * 成功标记<br>
@@ -38,12 +41,12 @@ public class AccountManageResult {
         this.accountNo = accountNo;
     }
 
-    public String getErrorCode() {
-        return errorCode;
+    public ErrorContext getErrorContext() {
+        return errorContext;
     }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+    public void setErrorContext(ErrorContext errorContext) {
+        this.errorContext = errorContext;
     }
 
     public boolean isSuccess() {

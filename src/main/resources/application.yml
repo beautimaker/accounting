@@ -12,6 +12,12 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.xushicao.accounting.dao.entity
 
-
+logging:
+  level:
+    root: INFO #设置根日志级别为INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: c:\path\to\logfile.log
 
 

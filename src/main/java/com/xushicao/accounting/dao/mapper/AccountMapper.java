@@ -23,9 +23,9 @@ public interface AccountMapper {
      * 插入方法
      * 通过给定实体类，向数据库中插入数据
      *
-     * @param accountdo 数据库实体类
+     * @param accountDO 数据库实体类
      */
-    void insert(AccountDO accountdo);
+    void insert(AccountDO accountDO);
 
     AccountDO select();
 }

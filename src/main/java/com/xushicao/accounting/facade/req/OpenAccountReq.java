@@ -114,5 +114,16 @@ public class OpenAccountReq {
         this.accountName = accountName;
     }
 
-
+    @Override
+    public String toString() {
+        return "OpenAccountReq{" +
+                "accountName='" + accountName + '\'' +
+                ", accountType='" + accountType + '\'' +
+                ", currency='" + currency + '\'' +
+                ", titleCode='" + titleCode + '\'' +
+                ", reconInst='" + reconInst + '\'' +
+                ", relationCode='" + relationCode + '\'' +
+                ", relationInstId='" + relationInstId + '\'' +
+                '}';
+    }
 }

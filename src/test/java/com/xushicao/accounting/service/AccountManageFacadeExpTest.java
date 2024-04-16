@@ -48,7 +48,7 @@ public class AccountManageFacadeExpTest {
 
         Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case1:返回账户存在");
-        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100003101"), "异常类型不为请求对象为空");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "case1:异常类型不为请求对象为空");
 
 
         // case2: 账户类型为内部户时账户名为空异常
@@ -58,7 +58,7 @@ public class AccountManageFacadeExpTest {
         result = accountManageFacade.openAccount(openAccountReq);
         Assert.isTrue(!result.isSuccess(), "case2:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case2:返回账户存在");
-        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100003101"), "异常类型不为账户类型为内部户时账户名为空");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "case:异常类型不为账户类型为内部户时账户名为空");
 
 
         //case3:账户类型或币种参数不在给定范围内
@@ -69,7 +69,7 @@ public class AccountManageFacadeExpTest {
         result = accountManageFacade.openAccount(openAccountReq);
         Assert.isTrue(!result.isSuccess(), "case3:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case3:返回账户存在");
-        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100003101"), "异常类型不为账户类型或币种参数不在给定范围");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "case3:异常类型不为账户类型或币种参数不在给定范围");
 
 
     }

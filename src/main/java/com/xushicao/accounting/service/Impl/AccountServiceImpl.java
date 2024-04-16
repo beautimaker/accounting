@@ -11,15 +11,13 @@ import com.xushicao.accounting.dao.mapper.InnerAccountInfoMapper;
 import com.xushicao.accounting.dao.mapper.SequenceMapper;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.service.AccountService;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLException;
-
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * @author Shichao.xu
@@ -28,7 +26,7 @@ import java.sql.SQLException;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("BIZ-SERVICE");
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
     /**
      * 开户映射接口
      * 用于实现插入开户数据到mysql
@@ -55,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
      * 事务管理对象
      */
     @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+    private TransactionTemplate transactionTemplate;
 
     /**
      * 开户方法
@@ -65,34 +63,38 @@ public class AccountServiceImpl implements AccountService {
      * @return
      */
     @Override
-    @Transactional
-    public String openAccount(OpenAccountReq openAccountReq) throws SQLException {
+    public String openAccount(OpenAccountReq openAccountReq) {
 
         //打印日志
+        LOGGER.info("收到用户新增请求:{}", openAccountReq);
 
         // 2、生成账号
         String accountNo = getAccountNo(openAccountReq);
 
         //创建数据对象
-        InnerAccountInfoDO innerAccountInfoDO = null;
+
         AccountDO accountDO = buildAccount(accountNo, openAccountReq);
 
-
         //执行数据库操作
-        sqlSessionTemplate.getConnection().setAutoCommit(false);
-        try {
-            if (openAccountReq.getAccountType().equals("03")) {
-                innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
-                innerAccountInfoMapper.insert(innerAccountInfoDO);
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                try {
+                    if (openAccountReq.getAccountType().equals("03")) {
+                        InnerAccountInfoDO innerAccountInfoDO = null;
+                        innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
+                        innerAccountInfoMapper.insert(innerAccountInfoDO);
+                    }
+                    accountMapper.insert(accountDO);
+                } catch (Exception e) {
+                    status.setRollbackOnly();
+                }
             }
-            accountMapper.insert(accountDO);
-
-            sqlSessionTemplate.getConnection().commit();
-        } catch (SQLException e) {
-            sqlSessionTemplate.getConnection().rollback();
-            throw e;
-        }
+        });
+        LOGGER.info("用户请求处理结束:{}", openAccountReq);
         return accountNo;
+
+
     }
 
     /**

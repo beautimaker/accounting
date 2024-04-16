@@ -8,10 +8,10 @@ import com.xushicao.accounting.facade.result.AccountManageResult;
 import com.xushicao.accounting.model.enums.AccountingErrDtlEnum;
 import com.xushicao.accounting.model.enums.AccountingErrScenarioEnum;
 import com.xushicao.accounting.model.exception.AccountingException;
-import com.xushicao.accounting.util.LoggerUtil;
 import org.springframework.dao.DataAccessException;
 
 import java.sql.SQLException;
+
 
 /**
  * 交易模板类
@@ -41,14 +41,15 @@ public class TradeTemplate extends AbstractTemplate {
             buildSuccessResponse(result);
 
         } catch (AccountingException e) {
-            LoggerUtil.warn(LOGGER, "查询服务异常", e);
+            LOGGER.error("交易服务出现异常", e);
             buildFailureResponse(result, ERR_SCENARIO, e);
         } catch (DataAccessException | SQLException ex) {
             //打印日志
+            LOGGER.error("交易服务出现数据库层异常", ex);
             buildFailureResponse(result, ERR_SCENARIO, AccountingErrDtlEnum.DB_EXCEPTION, "交易服务出现数据库层异常");
         } catch (RuntimeException e) {
             //打印日志
-
+            LOGGER.error("交易服务出现未知异常", e);
             buildFailureResponse(result, ERR_SCENARIO, AccountingErrDtlEnum.UNKNOWN_EXCEPTION, "交易服务出现未知异常");
         } finally {
             //创建线程保留日志对象

@@ -33,6 +33,6 @@ public interface TradeCallBack {
      *
      * @return 摘要日志
      */
-    TradeDigestLog buildDigestLog();
+//    TradeDigestLog buildDigestLog();
 
 }

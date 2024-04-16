@@ -5,11 +5,16 @@
 package com.xushicao.accounting.template;
 
 import com.xushicao.accounting.facade.result.AccountManageResult;
+import com.xushicao.accounting.model.enums.AccountingErrDtlEnum;
 import com.xushicao.accounting.model.enums.AccountingErrScenarioEnum;
 import com.xushicao.accounting.model.exception.AccountingException;
 import com.xushicao.accounting.util.LoggerUtil;
+import org.springframework.dao.DataAccessException;
 
 /**
+ * 交易模板类
+ * 执行业务逻辑，捕获异常，构建返回结果
+ *
  * @author Shichao.xu
  * @version $ QueryTemplate, V0.1 2024/4/14 16:01 Shichao.xu Exp $
  */
@@ -19,12 +24,12 @@ public class TradeTemplate extends AbstractTemplate {
     /**
      * 场景码
      */
-    public static final AccountingErrScenarioEnum ERR_SCENARIO = AccountingErrScenarioEnum.QUERY;
+    public static final AccountingErrScenarioEnum ERR_SCENARIO = AccountingErrScenarioEnum.TRADE;
 
     /**
-     * 查询模板
+     * 操作模板
      *
-     * @param result   查询结果
+     * @param result   返回结果
      * @param callBcak 回调接口
      */
     public static void trade(AccountManageResult result, TradeCallBack callBcak) {
@@ -36,7 +41,16 @@ public class TradeTemplate extends AbstractTemplate {
         } catch (AccountingException e) {
             LoggerUtil.warn(LOGGER, "查询服务异常", e);
             buildFailureResponse(result, ERR_SCENARIO, e);
+        } catch (DataAccessException ex) {
+            //打印日志
+
+            buildFailureResponse(result, ERR_SCENARIO, AccountingErrDtlEnum.DB_EXCEPTION, "交易服务出现数据库层异常");
+        } catch (RuntimeException e) {
+            //打印日志
+
+            buildFailureResponse(result, ERR_SCENARIO, AccountingErrDtlEnum.UNKNOWN_EXCEPTION, "交易服务出现未知异常");
         } finally {
+            //创建线程保留日志对象
 
         }
 

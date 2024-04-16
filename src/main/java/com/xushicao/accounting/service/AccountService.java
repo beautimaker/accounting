@@ -26,12 +26,4 @@ public interface AccountService {
      */
     String openAccount(OpenAccountReq openAccountReq) throws SQLException;
 
-
-    /**
-     * 账号生成方法
-     *
-     * @param openAccountReq 客户请求
-     * @return 账号
-     */
-    String getAccountNo(OpenAccountReq openAccountReq);
 }

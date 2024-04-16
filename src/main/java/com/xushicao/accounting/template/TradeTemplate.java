@@ -38,8 +38,7 @@ public class TradeTemplate extends AbstractTemplate {
         try {
             callBcak.checkParameter();
             callBcak.doTrade();
-            buildSuccessResponse(result);
-
+            result.setSuccess(true);
         } catch (AccountingException e) {
             LOGGER.error("交易服务出现异常", e);
             buildFailureResponse(result, ERR_SCENARIO, e);

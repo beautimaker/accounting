@@ -4,6 +4,10 @@
  */
 package com.xushicao.accounting.template;
 
+import com.xushicao.accounting.log.TradeDigestLog;
+
+import java.sql.SQLException;
+
 /**
  * 查询模版回调接口
  * * @author Shichao.xu
@@ -21,7 +25,7 @@ public interface TradeCallBack {
     /**
      * 执行开户
      */
-    void doTrade();
+    void doTrade() throws SQLException;
 
 
     /**
@@ -29,6 +33,6 @@ public interface TradeCallBack {
      *
      * @return 摘要日志
      */
-//    QueryDigestLog buildDigestLog();
+    TradeDigestLog buildDigestLog();
 
 }

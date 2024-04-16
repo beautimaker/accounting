@@ -11,9 +11,15 @@ import com.xushicao.accounting.dao.mapper.InnerAccountInfoMapper;
 import com.xushicao.accounting.dao.mapper.SequenceMapper;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.service.AccountService;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.SQLException;
+
 
 /**
  * @author Shichao.xu
@@ -22,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AccountServiceImpl implements AccountService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("BIZ-SERVICE");
     /**
      * 开户映射接口
      * 用于实现插入开户数据到mysql
@@ -43,9 +50,23 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private InnerAccountInfoMapper innerAccountInfoMapper;
 
+
+    /**
+     * 事务管理对象
+     */
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
+
+    /**
+     * 开户方法
+     * 完成数据库插入，实现开户
+     *
+     * @param openAccountReq
+     * @return
+     */
     @Override
     @Transactional
-    public void addAccount(OpenAccountReq openAccountReq) {
+    public String openAccount(OpenAccountReq openAccountReq) throws SQLException {
 
         //打印日志
 
@@ -56,13 +77,22 @@ public class AccountServiceImpl implements AccountService {
         InnerAccountInfoDO innerAccountInfoDO = null;
         AccountDO accountDO = buildAccount(accountNo, openAccountReq);
 
-        //执行数据库操作
-        if (openAccountReq.getAccountType().equals("03")) {
-            innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
-            innerAccountInfoMapper.insert(innerAccountInfoDO);
-        }
-        accountMapper.insert(accountDO);
 
+        //执行数据库操作
+        sqlSessionTemplate.getConnection().setAutoCommit(false);
+        try {
+            if (openAccountReq.getAccountType().equals("03")) {
+                innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
+                innerAccountInfoMapper.insert(innerAccountInfoDO);
+            }
+            accountMapper.insert(accountDO);
+
+            sqlSessionTemplate.getConnection().commit();
+        } catch (SQLException e) {
+            sqlSessionTemplate.getConnection().rollback();
+            throw e;
+        }
+        return accountNo;
     }
 
     /**

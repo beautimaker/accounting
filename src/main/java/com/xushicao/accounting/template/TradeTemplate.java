@@ -11,6 +11,8 @@ import com.xushicao.accounting.model.exception.AccountingException;
 import com.xushicao.accounting.util.LoggerUtil;
 import org.springframework.dao.DataAccessException;
 
+import java.sql.SQLException;
+
 /**
  * 交易模板类
  * 执行业务逻辑，捕获异常，构建返回结果
@@ -41,9 +43,8 @@ public class TradeTemplate extends AbstractTemplate {
         } catch (AccountingException e) {
             LoggerUtil.warn(LOGGER, "查询服务异常", e);
             buildFailureResponse(result, ERR_SCENARIO, e);
-        } catch (DataAccessException ex) {
+        } catch (DataAccessException | SQLException ex) {
             //打印日志
-
             buildFailureResponse(result, ERR_SCENARIO, AccountingErrDtlEnum.DB_EXCEPTION, "交易服务出现数据库层异常");
         } catch (RuntimeException e) {
             //打印日志

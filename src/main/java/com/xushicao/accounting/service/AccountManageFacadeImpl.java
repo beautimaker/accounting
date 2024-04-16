@@ -10,11 +10,14 @@ import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
 import com.xushicao.accounting.log.DigestLogAnnotated;
+import com.xushicao.accounting.log.TradeDigestLog;
 import com.xushicao.accounting.template.TradeCallBack;
 import com.xushicao.accounting.template.TradeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLException;
 
 import static com.xushicao.accounting.util.ParaCheckUtil.*;
 
@@ -45,7 +48,7 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("account")
-    @DigestLogAnnotated(AccountingConstants.QUERY_DIGEST_LOG)
+    @DigestLogAnnotated(AccountingConstants.TREAD_DIGEST_LOG)
     public AccountManageResult openAccount(@RequestBody OpenAccountReq openAccountReq) {
 
 
@@ -71,15 +74,15 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 
             @Override
             @Transactional
-            public void doTrade() {
-                accountService.addAccount(openAccountReq);
-                result.setAccountNo(accountService.getAccountNo(openAccountReq));
+            public void doTrade() throws SQLException {
+                String accountNo = accountService.openAccount(openAccountReq);
+                result.setAccountNo(accountNo);
             }
 
-//            @Override
-//            public QueryDigestLog buildDigestLog() {
-//                return new QueryDigestLog(openAccountReq);
-//            }
+            @Override
+            public TradeDigestLog buildDigestLog() {
+                return new TradeDigestLog(openAccountReq);
+            }
         });
 
         return result;

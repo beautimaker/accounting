@@ -11,8 +11,8 @@ import com.xushicao.accounting.facade.req.OpenAccountReq;
  * @version $ QueryDigestLog, V0.1 2024/4/14 17:42 Shichao.xu Exp $
  */
 
-final public class QueryDigestLog {
-    public QueryDigestLog(OpenAccountReq openAccountReq) {
+final public class TradeDigestLog {
+    public TradeDigestLog(OpenAccountReq openAccountReq) {
 
         if (openAccountReq == null) {
             return;

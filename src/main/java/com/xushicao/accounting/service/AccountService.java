@@ -6,7 +6,9 @@ package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.dao.entity.AccountDO;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
-import org.springframework.stereotype.Service;
+
+import java.sql.SQLException;
+
 
 /**
  * 账户服务接口
@@ -22,7 +24,7 @@ public interface AccountService {
      *
      * @param openAccountReq
      */
-    void addAccount(OpenAccountReq openAccountReq);
+    String openAccount(OpenAccountReq openAccountReq) throws SQLException;
 
 
     /**

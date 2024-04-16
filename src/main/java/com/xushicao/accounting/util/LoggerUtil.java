@@ -5,6 +5,7 @@
 package com.xushicao.accounting.util;
 
 
+import com.xushicao.accounting.dao.entity.AccountDO;
 import org.slf4j.Logger;
 
 /**
@@ -19,5 +20,8 @@ public class LoggerUtil {
         logger.warn(message, throwable);
     }
 
+    public static void info(Logger logger, String message, AccountDO accountDO) {
+        logger.info(message);
+    }
 
 }

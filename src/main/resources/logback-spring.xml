@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--properties-->
+    <springProperty scope="context" name="Accounting.logging.home" source="Accounting.logging.home"/>
+    <springProperty scope="context" name="Accounting.logging.level" source="Accounting.logging.level"
+                    defaultValue="INFO"/>
+    <springProperty scope="context" name="env" source="env" defaultValue="prod"/>
+
+    <!-- 1通用appender -->
+    <!-- 1.1控制台appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <param name="target" value="System.out"/>
+        <encoder>
+            <pattern>[%d] [%thread][%X{traceId}] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+        <param name="target" value="System.err"/>
+        <encoder>
+            <pattern>[%d] [%thread][%X{traceId}] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 1.2.1默认日志输出appender -->
+    <appender name="DEFAULT-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>[%d] [%thread][%X{traceId}] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+        <File>${Accounting.logging.home}/common-default.log</File>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${Accounting.logging.level}</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${Accounting.logging.home}/common-default.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 1.2.2错误日志输出appender -->
+    <appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>[%d] [%thread][%X{traceId}] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+        <File>${Accounting.logging.home}/common-error.log</File>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${Accounting.logging.home}/common-error.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!--2 root loggers, 没有指定输出的日志在这输出 -->
+    <root level="${Accounting.logging.level}">
+        <if condition='!property("env").contains("prod")&amp;&amp;!property("env").contains("pro")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+        <appender-ref ref="DEFAULT-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </root>
+
+    <!-- 3系统自定义appender -->
+    <!--3.1业务处理过程日志 -->
+    <appender name="BIZ-SERVICE-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>[%d] [%thread][%X{traceId}] - %msg %n</pattern>
+        </encoder>
+        <File>${Accounting.logging.home}/biz-service.7dt.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${Accounting.logging.home}/biz-service.7dt.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <logger name="BIZ-SERVICE" additivity="false">
+        <level value="${Accounting.logging.level}"/>
+        <if condition='!property("env").contains("prod")&amp;&amp;!property("env").contains("pro")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+        <appender-ref ref="BIZ-SERVICE-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <!-- 3.2交易类业务摘要日志 -->
+
+
+    <!-- 3.3查询类业务摘要日志 -->
+
+    <!-- 3.4本地缓存信息日志 -->
+    <appender name="LOCAL-CACHE-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>[%d] [%X{traceId}] - %msg %n</pattern>
+        </encoder>
+        <File>${Accounting.logging.home}/local-cache.7dt.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${Accounting.logging.home}/local-cache.7dt.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <logger name="com.xushicao.accounting.biz.cache" additivity="false">
+        <if condition='!property("env").contains("prod")&amp;&amp;!property("env").contains("pro")'>
+            <then>
+                <appender-ref ref="STDOUT"/>
+            </then>
+        </if>
+        <appender-ref ref="LOCAL-CACHE-APPENDER"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+</configuration>

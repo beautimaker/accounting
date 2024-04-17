@@ -28,11 +28,4 @@ public interface TradeCallBack {
     void doTrade() throws SQLException;
 
 
-    /**
-     * 创建摘要日志
-     *
-     * @return 摘要日志
-     */
-//    TradeDigestLog buildDigestLog();
-
 }

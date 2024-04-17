@@ -5,15 +5,13 @@
 
 package com.xushicao.accounting.service;
 
-import com.xushicao.accounting.common.AccountingConstants;
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.OpenAccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
-import com.xushicao.accounting.log.DigestLogAnnotated;
 import com.xushicao.accounting.template.TradeCallBack;
 import com.xushicao.accounting.template.TradeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -47,7 +45,6 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("account")
-    @DigestLogAnnotated(AccountingConstants.TREAD_DIGEST_LOG)
     public AccountManageResult openAccount(@RequestBody OpenAccountReq openAccountReq) {
 
 
@@ -72,16 +69,12 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
             }
 
             @Override
-            @Transactional
             public void doTrade() throws SQLException {
                 String accountNo = accountService.openAccount(openAccountReq);
                 result.setAccountNo(accountNo);
             }
 
-//            @Override
-//            public TradeDigestLog buildDigestLog() {
-//                return new TradeDigestLog(openAccountReq);
-//            }
+
         });
         return result;
 

@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
     public String openAccount(OpenAccountReq openAccountReq) {
 
         //打印日志
-        LOGGER.info("收到用户新增请求:{}", openAccountReq);
+        LOGGER.info("收到用户新增开户请求:{}", openAccountReq);
 
         // 2、生成账号
         String accountNo = getAccountNo(openAccountReq);
@@ -79,19 +79,15 @@ public class AccountServiceImpl implements AccountService {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    if (openAccountReq.getAccountType().equals("03")) {
-                        InnerAccountInfoDO innerAccountInfoDO = null;
-                        innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
-                        innerAccountInfoMapper.insert(innerAccountInfoDO);
-                    }
-                    accountMapper.insert(accountDO);
-                } catch (Exception e) {
-                    status.setRollbackOnly();
+
+                if (openAccountReq.getAccountType().equals("03")) {
+                    InnerAccountInfoDO innerAccountInfoDO = buildInnerAccountInfo(accountNo, openAccountReq);
+                    innerAccountInfoMapper.insert(innerAccountInfoDO);
                 }
+                accountMapper.insert(accountDO);
             }
         });
-        LOGGER.info("用户请求处理结束:{}", openAccountReq);
+        LOGGER.info("用户开户请求处理结束:{}", openAccountReq);
         return accountNo;
 
 

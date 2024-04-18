@@ -8,21 +8,16 @@
                 #{currency})
     </insert>
 
-    <select id="checkStatus" resultType="AccountDO">
+    <select id="select" resultType="AccountDO">
         select *
         from account
         where account_no = #{accountNo}
     </select>
 
-    <update id="freeze">
+    <update id="update">
         update account
-        set status='F'
+        set status=#{status}
         where account_no = #{accountNo}
     </update>
 
-    <update id="unFreeze">
-        update account
-        set status='N'
-        where account_no = #{accountNo}
-    </update>
 </mapper>

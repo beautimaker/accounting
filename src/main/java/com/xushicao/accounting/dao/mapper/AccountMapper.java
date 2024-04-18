@@ -34,18 +34,16 @@ public interface AccountMapper {
      * @param accountNo 用户账号
      * @return 用户数据
      */
-    AccountDO checkStatus(String accountNo);
+    AccountDO select(String accountNo);
 
 
     /**
-     * 冻结账户方法
+     * 更新方法
      *
      * @param accountNo 账号
      */
-    void freeze(String accountNo);
+    void update(String accountNo, String status);
 
-
-    void unFreeze(String accountNo);
 
 }
 

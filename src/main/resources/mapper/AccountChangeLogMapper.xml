@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xushicao.accounting.dao.mapper.AccountChangeLogMapper">
-    <insert id="change">
-        insert into account_change_log (account_no, change_time, change_type, `before`, `after`)
+    <insert id="insert">
+        insert into account_change_log (account_no, create_time, change_type, `before`, `after`)
         values (#{accountNo}, now(), #{changeType}, #{before}, #{after})
     </insert>
 </mapper>

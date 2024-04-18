@@ -114,20 +114,21 @@ public class AccountServiceImpl implements AccountService {
         //打印日志
         LOGGER.info("收到用户冻结账户请求:{}", accountReq.getAccountNo());
 
+        if (accountMapper.select(accountReq.getAccountNo()).getStatus().equals("F")) {
+            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已处于冻结状态");
+        }
+
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                if (accountMapper.checkStatus(accountReq.getAccountNo()).getStatus().equals("F")) {
-                    throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已处于冻结状态");
-                } else {
-                    accountMapper.freeze(accountReq.getAccountNo());
-                    accountChangeLogMapper.change(buildAccountChangeLog(accountReq.getAccountNo(),
-                            "status", "N", "F"));
-                }
-                LOGGER.info("处理用户冻结请求请求结束:{}", accountReq.getAccountNo());
+
+                accountMapper.update(accountReq.getAccountNo(), "F");
+                accountChangeLogMapper.insert(buildAccountChangeLog(accountReq.getAccountNo(),
+                        "status", "N", "F"));
             }
         });
 
+        LOGGER.info("处理用户冻结请求请求结束:{}", accountReq.getAccountNo());
     }
 
     /**
@@ -140,21 +141,20 @@ public class AccountServiceImpl implements AccountService {
 
         LOGGER.info("收到用户解冻账户请求:{}", accountReq.getAccountNo());
 
+        if (accountMapper.select(accountReq.getAccountNo()).getStatus().equals("N")) {
+            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已处于解冻状态");
+        }
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
-                if (accountMapper.checkStatus(accountReq.getAccountNo()).equals("N")) {
-                    throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已处于解冻状态");
-                } else {
-                    accountMapper.unFreeze(accountReq.getAccountNo());
-                    accountChangeLogMapper.change(buildAccountChangeLog(accountReq.getAccountNo(), "status",
-                            "F", "N"));
-                }
 
-                LOGGER.info("处理用户解冻请求请求结束:{}", accountReq.getAccountNo());
+
+                accountMapper.update(accountReq.getAccountNo(), "N");
+                accountChangeLogMapper.insert(buildAccountChangeLog(accountReq.getAccountNo(), "status",
+                        "F", "N"));
             }
         });
-
+        LOGGER.info("处理用户解冻请求请求结束:{}", accountReq.getAccountNo());
     }
 
     /**

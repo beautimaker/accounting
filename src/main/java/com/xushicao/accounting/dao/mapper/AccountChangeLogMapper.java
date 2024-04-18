@@ -16,6 +16,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AccountChangeLogMapper {
 
-    void change(AccountChangeLogDO changeLogDO);
+    /**
+     * 插入方法
+     *
+     * @param changeLogDO
+     */
+    void insert(AccountChangeLogDO changeLogDO);
 
 }

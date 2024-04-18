@@ -22,11 +22,6 @@ public class AccountChangeLogDO {
     private String accountNo;
 
     /**
-     * 修改时间
-     */
-    private Date changeTime;
-
-    /**
      * 修改类型
      */
     private String changeType;
@@ -41,6 +36,16 @@ public class AccountChangeLogDO {
      */
     private String after;
 
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
     public String getAccountNo() {
         return accountNo;
     }
@@ -49,12 +54,20 @@ public class AccountChangeLogDO {
         this.accountNo = accountNo;
     }
 
-    public Date getChangeTime() {
-        return changeTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setChangeTime(Date changeTime) {
-        this.changeTime = changeTime;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getChangeType() {

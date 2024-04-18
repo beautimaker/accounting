@@ -15,6 +15,12 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface InnerAccountInfoMapper {
+
+    /**
+     * 插入方法
+     *
+     * @param innerAccountInfoDO
+     */
     void insert(InnerAccountInfoDO innerAccountInfoDO);
 
 

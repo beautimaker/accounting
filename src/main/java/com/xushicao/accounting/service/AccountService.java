@@ -4,8 +4,7 @@
  */
 package com.xushicao.accounting.service;
 
-import com.xushicao.accounting.dao.entity.AccountDO;
-import com.xushicao.accounting.facade.req.OpenAccountReq;
+import com.xushicao.accounting.facade.req.AccountReq;
 
 import java.sql.SQLException;
 
@@ -22,8 +21,8 @@ public interface AccountService {
     /**
      * 开户方法
      *
-     * @param openAccountReq
+     * @param AccountReq
      */
-    String openAccount(OpenAccountReq openAccountReq) throws SQLException;
+    String openAccount(AccountReq AccountReq) throws SQLException;
 
 }

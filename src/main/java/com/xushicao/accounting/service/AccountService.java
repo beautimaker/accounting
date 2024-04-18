@@ -21,8 +21,22 @@ public interface AccountService {
     /**
      * 开户方法
      *
-     * @param AccountReq
+     * @param accountReq
      */
-    String openAccount(AccountReq AccountReq) throws SQLException;
+    String openAccount(AccountReq accountReq) throws SQLException;
 
+
+    /**
+     * 冻结账户方法
+     *
+     * @param accountReq 请求对象
+     */
+    void freezeAccount(AccountReq accountReq);
+
+    /**
+     * 解冻账户方法
+     *
+     * @param accountReq 请求对象
+     */
+    void unFreezeAccount(AccountReq accountReq);
 }

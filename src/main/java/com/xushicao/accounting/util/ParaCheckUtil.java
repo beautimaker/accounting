@@ -40,6 +40,11 @@ public class ParaCheckUtil {
     public static final String ACCOUNT_CURRENCY = "币种:currency";
 
     /**
+     * 账号
+     */
+    public static final String ACCOUNT_NUMBER = "账号:number";
+
+    /**
      * 私有构造函数
      */
     private ParaCheckUtil() {

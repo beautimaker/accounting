@@ -27,6 +27,25 @@ public interface AccountMapper {
      */
     void insert(AccountDO accountDO);
 
-    AccountDO select();
+    /**
+     * 查询方法
+     * 通过用户账号，返回用户数据
+     *
+     * @param accountNo 用户账号
+     * @return 用户数据
+     */
+    AccountDO checkStatus(String accountNo);
+
+
+    /**
+     * 冻结账户方法
+     *
+     * @param accountNo 账号
+     */
+    void freeze(String accountNo);
+
+
+    void unFreeze(String accountNo);
+
 }
 

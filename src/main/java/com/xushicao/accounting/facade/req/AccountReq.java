@@ -14,7 +14,12 @@ package com.xushicao.accounting.facade.req;
  * @version $ OpenAccountReq, V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
 
-public class OpenAccountReq {
+public class AccountReq {
+
+    /**
+     * 用户账号
+     */
+    private String accountNo;
 
     /**
      * 账号别名，选填，内部户（账户类型为03）时必填
@@ -112,6 +117,14 @@ public class OpenAccountReq {
 
     public void setAccountName(String accountName) {
         this.accountName = accountName;
+    }
+
+    public String getAccountNo() {
+        return accountNo;
+    }
+
+    public void setAccountNo(String accountNo) {
+        this.accountNo = accountNo;
     }
 
     @Override

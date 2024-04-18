@@ -6,7 +6,7 @@
 package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.facade.AccountManageFacade;
-import com.xushicao.accounting.facade.req.OpenAccountReq;
+import com.xushicao.accounting.facade.req.AccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
 import com.xushicao.accounting.template.TradeCallBack;
 import com.xushicao.accounting.template.TradeTemplate;
@@ -40,12 +40,12 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      * 开户方法的重写<br/>
      * 用于实现开户
      *
-     * @param openAccountReq 开户请求
+     * @param accountReq 开户请求
      * @return 开户结果
      */
     @Override
     @PostMapping("account")
-    public AccountManageResult openAccount(@RequestBody OpenAccountReq openAccountReq) {
+    public AccountManageResult openAccount(@RequestBody AccountReq accountReq) {
 
 
         final AccountManageResult result = new AccountManageResult();
@@ -54,23 +54,23 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
             @Override
             public void checkParameter() {
 
-                checkParamNotNull(openAccountReq, USER_REQUEST);
+                checkParamNotNull(accountReq, USER_REQUEST);
 
-                checkParaNotBlank(openAccountReq.getAccountType(), ACCOUNT_TYPE);
-                checkParaMatch(openAccountReq.getAccountType(), ACCOUNT_TYPE);
+                checkParaNotBlank(accountReq.getAccountType(), ACCOUNT_TYPE);
+                checkParaMatch(accountReq.getAccountType(), ACCOUNT_TYPE);
 
-                checkParaNotBlank(openAccountReq.getCurrency(), ACCOUNT_CURRENCY);
-                checkParaMatch(openAccountReq.getCurrency(), ACCOUNT_CURRENCY);
+                checkParaNotBlank(accountReq.getCurrency(), ACCOUNT_CURRENCY);
+                checkParaMatch(accountReq.getCurrency(), ACCOUNT_CURRENCY);
 
-                if (openAccountReq.getAccountType().equals("03")) {
-                    checkParaNotBlank(openAccountReq.getAccountName(), ACCOUNT_NAME);
+                if (accountReq.getAccountType().equals("03")) {
+                    checkParaNotBlank(accountReq.getAccountName(), ACCOUNT_NAME);
                 }
 
             }
 
             @Override
             public void doTrade() throws SQLException {
-                String accountNo = accountService.openAccount(openAccountReq);
+                String accountNo = accountService.openAccount(accountReq);
                 result.setAccountNo(accountNo);
             }
 
@@ -80,4 +80,52 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
 
     }
 
+    /**
+     * 冻结账户方法重写
+     *
+     * @param accountReq 用户请求
+     * @return 返回冻结结果
+     */
+    @Override
+    @PostMapping("freezeAccount")
+    public AccountManageResult freezeAccount(@RequestBody AccountReq accountReq) {
+
+        final AccountManageResult result = new AccountManageResult();//创建结果对象
+
+        TradeTemplate.trade(result, new TradeCallBack() {
+            @Override
+            public void checkParameter() {
+                checkParamNotNull(accountReq, USER_REQUEST);
+                checkParaNotBlank(accountReq.getAccountNo(), ACCOUNT_NUMBER);
+            }
+
+            @Override
+            public void doTrade() throws SQLException {
+                accountService.freezeAccount(accountReq);
+            }
+        });
+
+        return result;
+    }
+
+    @Override
+    @PostMapping("unFreezeAccount")
+    public AccountManageResult unFreezeAccount(AccountReq accountReq) {
+
+        final AccountManageResult result = new AccountManageResult();
+
+        TradeTemplate.trade(result, new TradeCallBack() {
+            @Override
+            public void checkParameter() {
+                checkParamNotNull(accountReq, USER_REQUEST);
+                checkParaNotBlank(accountReq.getAccountNo(), ACCOUNT_NUMBER);
+            }
+
+            @Override
+            public void doTrade() throws SQLException {
+                accountService.unFreezeAccount(accountReq);
+            }
+        });
+        return result;
+    }
 }

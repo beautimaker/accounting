@@ -4,7 +4,7 @@
     <springProperty scope="context" name="Accounting.logging.home" source="Accounting.logging.home"/>
     <springProperty scope="context" name="Accounting.logging.level" source="Accounting.logging.level"
                     defaultValue="INFO"/>
-    <springProperty scope="context" name="env" source="env" defaultValue="prod"/>
+    <springProperty scope="context" name="env" source="env" defaultValue=""/>
 
     <!-- 1通用appender -->
     <!-- 1.1控制台appender -->

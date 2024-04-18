@@ -5,11 +5,9 @@
 package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.facade.AccountManageFacade;
-import com.xushicao.accounting.facade.req.OpenAccountReq;
+import com.xushicao.accounting.facade.req.AccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
@@ -39,7 +37,7 @@ public class AccountManageFacadeExpTest {
     @Test
     void expTestOpenAccount() {
 
-        OpenAccountReq openAccountReq = new OpenAccountReq();
+        AccountReq accountReq = new AccountReq();
         AccountManageResult result = null;
 
 
@@ -52,21 +50,21 @@ public class AccountManageFacadeExpTest {
 
 
         // case2: 账户类型为内部户时账户名为空异常
-        openAccountReq.setAccountType("03");
-        openAccountReq.setCurrency("156");
+        accountReq.setAccountType("03");
+        accountReq.setCurrency("156");
 
-        result = accountManageFacade.openAccount(openAccountReq);
+        result = accountManageFacade.openAccount(accountReq);
         Assert.isTrue(!result.isSuccess(), "case2:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case2:返回账户存在");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "case:异常类型不为账户类型为内部户时账户名为空");
 
 
         //case3:账户类型或币种参数不在给定范围内
-        openAccountReq.setAccountName("xushichao");
-        openAccountReq.setAccountType("06");
-        openAccountReq.setCurrency("123");
+        accountReq.setAccountName("xushichao");
+        accountReq.setAccountType("06");
+        accountReq.setCurrency("123");
 
-        result = accountManageFacade.openAccount(openAccountReq);
+        result = accountManageFacade.openAccount(accountReq);
         Assert.isTrue(!result.isSuccess(), "case3:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case3:返回账户存在");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "case3:异常类型不为账户类型或币种参数不在给定范围");
@@ -74,4 +72,35 @@ public class AccountManageFacadeExpTest {
 
     }
 
+    /**
+     * 冻结账户方法异常测试
+     */
+    @Test
+    void expTestFreezeAccount() {
+        AccountReq accountReq = new AccountReq();
+        AccountManageResult result = null;
+
+        //case1: 冻结账户账户冻结
+        accountReq.setAccountNo("20000310195978");
+
+        result = accountManageFacade.freezeAccount(accountReq);
+        Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户已冻结");
+    }
+
+    /**
+     * 解冻方法异常测试
+     */
+    @Test
+    void expTestUnFreezeAccount() {
+        AccountReq accountReq = new AccountReq();
+        AccountManageResult result = null;
+
+        //case1: 冻结账户账户冻结
+        accountReq.setAccountNo("20000310195978");
+
+        result = accountManageFacade.freezeAccount(accountReq);
+        Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户已解冻");
+    }
 }

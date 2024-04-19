@@ -24,6 +24,7 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.security.PrivateKey;
+import java.sql.SQLException;
 
 /**
  * @author Shichao.xu
@@ -107,14 +108,14 @@ public class AccountServiceImpl implements AccountService {
     /**
      * 冻结账户实现方法
      *
-     * @param accountReq 账户请求
+     * @param accountNo 账户账号
      */
     @Override
-    public void freezeAccount(AccountReq accountReq) {
+    public void freezeAccount(String accountNo) {
         //打印日志
-        LOGGER.info("收到用户冻结账户请求:{}", accountReq.getAccountNo());
+        LOGGER.info("收到用户冻结账户请求:{}", accountNo);
 
-        if (accountMapper.select(accountReq.getAccountNo()).getStatus().equals("F")) {
+        if (accountMapper.select(accountNo).getStatus().equals("F")) {
             throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已处于冻结状态");
         }
 
@@ -122,39 +123,45 @@ public class AccountServiceImpl implements AccountService {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
 
-                accountMapper.update(accountReq.getAccountNo(), "F");
-                accountChangeLogMapper.insert(buildAccountChangeLog(accountReq.getAccountNo(),
+                if (accountMapper.update(accountNo, "F") == 1) {
+                    throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                }
+                accountChangeLogMapper.insert(buildAccountChangeLog(accountNo,
                         "status", "N", "F"));
             }
         });
 
-        LOGGER.info("处理用户冻结请求请求结束:{}", accountReq.getAccountNo());
+        LOGGER.info("处理用户冻结请求请求结束:{}", accountNo);
     }
 
     /**
      * 解冻在账户实现方法
      *
-     * @param accountReq 客户请求
+     * @param accountNo 客户请求
      */
     @Override
-    public void unFreezeAccount(AccountReq accountReq) {
+    public void unFreezeAccount(String accountNo) {
 
-        LOGGER.info("收到用户解冻账户请求:{}", accountReq.getAccountNo());
+        LOGGER.info("收到用户解冻账户请求:{}", accountNo);
 
-        if (accountMapper.select(accountReq.getAccountNo()).getStatus().equals("N")) {
+        if (accountMapper.select(accountNo).getStatus().equals("N")) {
             throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已处于解冻状态");
         }
+
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
 
 
-                accountMapper.update(accountReq.getAccountNo(), "N");
-                accountChangeLogMapper.insert(buildAccountChangeLog(accountReq.getAccountNo(), "status",
+                if (accountMapper.update(accountNo, "N") != 1) {
+                    throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                }
+
+                accountChangeLogMapper.insert(buildAccountChangeLog(accountNo, "status",
                         "F", "N"));
             }
         });
-        LOGGER.info("处理用户解冻请求请求结束:{}", accountReq.getAccountNo());
+        LOGGER.info("处理用户解冻请求请求结束:{}", accountNo);
     }
 
     /**
@@ -215,6 +222,15 @@ public class AccountServiceImpl implements AccountService {
         return innerAccountInfoDO;
     }
 
+    /**
+     * 创建账户修改对象方法
+     *
+     * @param accountNo  账号
+     * @param changeType 修改字段
+     * @param before     之前状态
+     * @param after      之后状态
+     * @return 账户修改表对象
+     */
     private AccountChangeLogDO buildAccountChangeLog(String accountNo, String changeType, String before, String after) {
 
         AccountChangeLogDO accountChangeLogDO = new AccountChangeLogDO();
@@ -226,4 +242,28 @@ public class AccountServiceImpl implements AccountService {
         return accountChangeLogDO;
     }
 
+    /**
+     * 销户方法重写
+     *
+     * @param accountNo 用户请求
+     */
+    @Override
+    public void closeAccount(String accountNo) {
+
+        LOGGER.info("收到用户销户请求{}", accountNo);
+
+        AccountDO accountDO = accountMapper.select(accountNo);
+
+        if (accountDO.getBalance() != 0) {
+            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户存在余额，不能销户");
+        } else if (accountMapper.select(accountNo).getStatus().equals("C")) {
+            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已销户");
+        }
+
+        accountMapper.update(accountNo, "C");
+        accountChangeLogMapper.insert(buildAccountChangeLog(accountNo, "status",
+                accountDO.getStatus(), "C"));
+
+        LOGGER.info("处理用户销户请求结束{}", accountNo);
+    }
 }

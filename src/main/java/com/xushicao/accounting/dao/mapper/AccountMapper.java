@@ -39,10 +39,12 @@ public interface AccountMapper {
 
     /**
      * 更新方法
+     * 通过传入用户账号，以及想要修改的状态
+     * 实现数据库用户状态字段的修改
      *
      * @param accountNo 账号
      */
-    void update(String accountNo, String status);
+    int update(String accountNo, String status);
 
 
 }

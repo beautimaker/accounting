@@ -17,7 +17,8 @@
     <update id="update">
         update account
         set status=#{status}
-        where account_no = #{accountNo}
+        where account_no = #{accountNo};
     </update>
+
 
 </mapper>

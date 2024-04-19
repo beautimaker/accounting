@@ -25,7 +25,7 @@ public interface TradeCallBack {
     /**
      * 执行
      */
-    void doTrade() throws SQLException;
+    void doTrade();
 
 
 }

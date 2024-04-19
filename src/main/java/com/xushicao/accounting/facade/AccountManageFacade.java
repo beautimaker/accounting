@@ -16,30 +16,50 @@ import com.xushicao.accounting.facade.result.AccountManageResult;
  */
 
 public interface AccountManageFacade {
+
     /**
-     * 根据开户请求对象，实现开户功能
+     * 根据开户请求对象，通过用户信息
+     * 生成用户账号，同时向数据库中插入数据记录
+     * 并且返回用户账号到返回结果对象中
+     * 返回对象中含有开户是否的成功的属性success
      *
      * @param accountReq 开户请求
      * @return 开户结果
      */
     AccountManageResult openAccount(AccountReq accountReq);
 
-
     /**
-     * 根据账号账号，实现冻结功能
+     * 冻结方法
+     * 根据账户账号，修改数据库表中账户状态为”F“
+     * 实现账户的冻结
+     * 使用trade模板检查异常和建立返回结果
      *
-     * @param accountReq
+     * @param accountNo 账户账号
      * @return
      */
-    AccountManageResult freezeAccount(AccountReq accountReq);
+    AccountManageResult freezeAccount(String accountNo);
 
 
     /**
-     * 根据账户账号，实现解冻功能
+     * 解冻方法
+     * 根据账户账号，修改数据库表中账户状态为”N“
+     * 实现用户解冻
+     * 使用trade模板检查异常和建立返回结果
      *
-     * @param accountReq
-     * @return
+     * @param accountReq 用户请求
+     * @return 返回结果
      */
-    AccountManageResult unFreezeAccount(AccountReq accountReq);
+    AccountManageResult unFreezeAccount(String accountReq);
+
+    /**
+     * 销户方法
+     * 根据用户传入账号，修改数据库账户状态为"C"
+     * 实现账户销户
+     * 使用trade模板检查异常和建立返回结果
+     *
+     * @param accountNo 用户账号
+     * @return 返回结果
+     */
+    AccountManageResult closeAccount(String accountNo);
 
 }

@@ -18,6 +18,8 @@ public interface AccountChangeLogMapper {
 
     /**
      * 插入方法
+     * 传入，修改表数据对象，实现数据库数据的
+     * 插入，记录用户修改情况
      *
      * @param changeLogDO
      */

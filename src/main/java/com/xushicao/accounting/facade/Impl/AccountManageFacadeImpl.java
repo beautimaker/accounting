@@ -3,11 +3,12 @@
  * Copyright (c) 2004-2024 All Rights Reserved.
  */
 
-package com.xushicao.accounting.service;
+package com.xushicao.accounting.facade.Impl;
 
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.AccountReq;
 import com.xushicao.accounting.facade.result.AccountManageResult;
+import com.xushicao.accounting.service.AccountService;
 import com.xushicao.accounting.template.TradeCallBack;
 import com.xushicao.accounting.template.TradeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
             }
 
             @Override
-            public void doTrade() throws SQLException {
+            public void doTrade() {
                 String accountNo = accountService.openAccount(accountReq);
                 result.setAccountNo(accountNo);
             }
@@ -83,47 +84,71 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
     /**
      * 冻结账户方法重写
      *
-     * @param accountReq 用户请求
+     * @param accountNO 用户账号
      * @return 返回冻结结果
      */
     @Override
     @PostMapping("freezeAccount")
-    public AccountManageResult freezeAccount(@RequestBody AccountReq accountReq) {
+    public AccountManageResult freezeAccount(@RequestBody String accountNO) {
 
         final AccountManageResult result = new AccountManageResult();//创建结果对象
 
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
             public void checkParameter() {
-                checkParamNotNull(accountReq, USER_REQUEST);
-                checkParaNotBlank(accountReq.getAccountNo(), ACCOUNT_NUMBER);
+                checkParamNotNull(accountNO, USER_REQUEST);
+                checkParaNotBlank(accountNO, ACCOUNT_NUMBER);
             }
 
             @Override
-            public void doTrade() throws SQLException {
-                accountService.freezeAccount(accountReq);
+            public void doTrade() {
+                accountService.freezeAccount(accountNO);
             }
         });
 
         return result;
     }
 
+    /**
+     * 解冻账户方法重写
+     *
+     * @param accountNo 用户账号
+     * @return
+     */
     @Override
     @PostMapping("unFreezeAccount")
-    public AccountManageResult unFreezeAccount(AccountReq accountReq) {
+    public AccountManageResult unFreezeAccount(@RequestBody String accountNo) {
 
         final AccountManageResult result = new AccountManageResult();
 
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
             public void checkParameter() {
-                checkParamNotNull(accountReq, USER_REQUEST);
-                checkParaNotBlank(accountReq.getAccountNo(), ACCOUNT_NUMBER);
+                checkParaNotBlank(accountNo, ACCOUNT_NUMBER);
             }
 
             @Override
-            public void doTrade() throws SQLException {
-                accountService.unFreezeAccount(accountReq);
+            public void doTrade() {
+                accountService.unFreezeAccount(accountNo);
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public AccountManageResult closeAccount(@RequestBody String accountNo) {
+
+        final AccountManageResult result = new AccountManageResult();
+        TradeTemplate.trade(result, new TradeCallBack() {
+            @Override
+            public void checkParameter() {
+                checkParamNotNull(accountNo, USER_REQUEST);
+                checkParaNotBlank(accountNo, ACCOUNT_NUMBER);
+            }
+
+            @Override
+            public void doTrade() {
+                accountService.closeAccount(accountNo);
             }
         });
         return result;

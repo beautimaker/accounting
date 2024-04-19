@@ -83,7 +83,7 @@ public class AccountManageFacadeExpTest {
         //case1: 冻结账户账户冻结
         accountReq.setAccountNo("20000310195978");
 
-        result = accountManageFacade.freezeAccount(accountReq);
+        result = accountManageFacade.freezeAccount(accountReq.getAccountNo());
         Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户已冻结");
     }
@@ -99,8 +99,25 @@ public class AccountManageFacadeExpTest {
         //case1: 冻结账户账户冻结
         accountReq.setAccountNo("20000310195978");
 
-        result = accountManageFacade.freezeAccount(accountReq);
+        result = accountManageFacade.freezeAccount(accountReq.getAccountNo());
         Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户已解冻");
+    }
+
+    /**
+     * 销户方法异常测试
+     */
+    @Test
+    void expTestCloseAccount() {
+
+        AccountReq accountReq = new AccountReq();
+        AccountManageResult result = null;
+
+        //case1: 销户账户销户
+        accountReq.setAccountNo("20000310189978");
+
+        result = accountManageFacade.closeAccount(accountReq.getAccountNo());
+        Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
+        Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户存在余额");
     }
 }

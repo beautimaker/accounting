@@ -42,7 +42,7 @@ public class TradeTemplate extends AbstractTemplate {
         } catch (AccountingException e) {
             LOGGER.error("交易服务出现异常", e);
             buildFailureResponse(result, ERR_SCENARIO, e);
-        } catch (DataAccessException | SQLException ex) {
+        } catch (DataAccessException ex) {
             //打印日志
             LOGGER.error("交易服务出现数据库层异常", ex);
             buildFailureResponse(result, ERR_SCENARIO, AccountingErrDtlEnum.DB_EXCEPTION, "交易服务出现数据库层异常");

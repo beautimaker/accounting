@@ -18,6 +18,8 @@ public interface InnerAccountInfoMapper {
 
     /**
      * 插入方法
+     * 通过传入内部户信息对象，向数据库传入
+     * 相应数据
      *
      * @param innerAccountInfoDO
      */

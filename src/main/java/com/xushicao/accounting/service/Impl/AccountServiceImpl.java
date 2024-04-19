@@ -260,9 +260,17 @@ public class AccountServiceImpl implements AccountService {
             throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已销户");
         }
 
-        accountMapper.update(accountNo, "C");
-        accountChangeLogMapper.insert(buildAccountChangeLog(accountNo, "status",
-                accountDO.getStatus(), "C"));
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                if (accountMapper.update(accountNo, "C") != 1) {
+                    throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                }
+                accountChangeLogMapper.insert(buildAccountChangeLog(accountNo, "status",
+                        accountDO.getStatus(), "C"));
+            }
+        });
+
 
         LOGGER.info("处理用户销户请求结束{}", accountNo);
     }

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xushicao.accounting.dao.mapper.AccountMapper">
+    <resultMap id="accountResultMap" type="AccountDO">
+        <id property="accountNo" column="account_no"/>
+        <result property="accountName" column="account_name"/>
+        <result column="account_type" property="accountType"/>
+    </resultMap>
     <insert id="insert">
         insert into account (account_no, account_name, account_type, status, balance, create_time, update_time,
                              currency)
@@ -8,10 +13,17 @@
                 #{currency})
     </insert>
 
-    <select id="select" resultType="AccountDO">
+    <select id="select" resultMap="accountResultMap">
         select *
         from account
-        where account_no = #{accountNo}
+        where account_no = #{accountNo};
+    </select>
+
+    <select id="selectForUpdate" resultType="AccountDO">
+        select *
+        from account
+        where account_no = #{accountNo} for
+        update;
     </select>
 
     <update id="update">
@@ -20,5 +32,11 @@
         where account_no = #{accountNo};
     </update>
 
+    <update id="updateBalance">
+        update account
+        set balance=#{balance},
+            prev_balance=#{prevBalance}
+        where account_no = #{accountNo};
+    </update>
 
 </mapper>

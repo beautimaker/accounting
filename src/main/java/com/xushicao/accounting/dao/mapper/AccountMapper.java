@@ -9,6 +9,8 @@ import com.xushicao.accounting.dao.entity.AccountDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
+
 /**
  * 账户映射接口
  * 方法：数据插入方法
@@ -46,6 +48,25 @@ public interface AccountMapper {
      */
     int update(String accountNo, String status);
 
+    /**
+     * 更新方法
+     * 通过传入用户账号，以及余额
+     * 实现数据库余额的修改
+     *
+     * @param accountNo
+     * @param balance
+     * @return
+     */
+    int updateBalance(String accountNo, long balance, long prevBalance);
+
+    /**
+     * 加锁查询方法
+     * 通过用户账号，返回用户数据
+     *
+     * @param accountNo 用户账号
+     * @return 用户数据
+     */
+    AccountDO selectForUpdate(String accountNo);
 
 }
 

@@ -55,4 +55,14 @@ public interface AccountService {
      * @param accountNo 用户账号
      */
     void closeAccount(String accountNo);
+
+    /**
+     * 存款方法
+     * 通过传入账户账号，判断账户为个人账户，还是、
+     * 企业账户，根据传入金额，同时向账户和总账账户添加存款
+     *
+     * @param accountNo 账户账号
+     * @param balance   存款金额
+     */
+    void deposit(String accountNo, long balance);
 }

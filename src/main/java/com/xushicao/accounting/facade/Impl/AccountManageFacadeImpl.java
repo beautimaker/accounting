@@ -135,7 +135,14 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
         return result;
     }
 
+    /**
+     * 销户方法重写
+     *
+     * @param accountNo 用户账号
+     * @return 返回结果
+     */
     @Override
+    @PostMapping("closeAccount")
     public AccountManageResult closeAccount(@RequestBody String accountNo) {
 
         final AccountManageResult result = new AccountManageResult();
@@ -149,6 +156,32 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
             @Override
             public void doTrade() {
                 accountService.closeAccount(accountNo);
+            }
+        });
+        return result;
+    }
+
+    /**
+     * 存款方法重写
+     *
+     * @param accountNo 用户账号
+     * @param amount    存款金额
+     * @return 返回结果
+     */
+    @Override
+    @PostMapping("deposit")
+    public AccountManageResult deposit(String accountNo, long amount) {
+        final AccountManageResult result = new AccountManageResult();
+        TradeTemplate.trade(result, new TradeCallBack() {
+            @Override
+            public void checkParameter() {
+                checkParaNotBlank(accountNo, ACCOUNT_NUMBER);
+                checkParamNotNull(amount, ACCOUNT_AMOUNT);
+            }
+
+            @Override
+            public void doTrade() {
+                accountService.deposit(accountNo, amount);
             }
         });
         return result;

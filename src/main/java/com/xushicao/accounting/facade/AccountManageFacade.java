@@ -62,4 +62,14 @@ public interface AccountManageFacade {
      */
     AccountManageResult closeAccount(String accountNo);
 
+    /**
+     * 存款方法
+     * 通过账号账号, 判断账号是是企业用户还是
+     * 个人用户，根据存款金额同时添加到账户和总账账户中
+     * 并返回存款结果
+     *
+     * @param accountNo 用户账号
+     * @return
+     */
+    AccountManageResult deposit(String accountNo, long amount);
 }

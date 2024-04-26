@@ -99,10 +99,12 @@ public class AccountManageFacadeNormalTest {
         AccountManageResult result = null;
 
         //case1: 正常账户冻结
-        accountReq.setAccountNo("20000310195978");
+        accountReq.setAccountNo("20000310201978");
 
         result = accountManageFacade.freezeAccount(accountReq.getAccountNo());
         Assert.isTrue(result.isSuccess(), "case1:调用服务结果返回失败");
+
+        accountManageFacade.unFreezeAccount(accountReq.getAccountNo());
 
     }
 
@@ -116,11 +118,11 @@ public class AccountManageFacadeNormalTest {
         AccountManageResult result = null;
 
         //case1: 正常账户解冻
-        accountReq.setAccountNo("20000310195978");
+        accountReq.setAccountNo("20000310198978");
 
         result = accountManageFacade.unFreezeAccount(accountReq.getAccountNo());
         Assert.isTrue(result.isSuccess(), "case1:调用服务结果返回失败");
-
+        accountManageFacade.freezeAccount(accountReq.getAccountNo());
     }
 
     /**
@@ -133,8 +135,27 @@ public class AccountManageFacadeNormalTest {
         AccountManageResult result = null;
 
         //case1: 正常账户销户
-        accountReq.setAccountNo("20000310192978");
+        accountReq.setAccountNo("20000310195978");
         result = accountManageFacade.closeAccount(accountReq.getAccountNo());
         Assert.isTrue(result.isSuccess(), "case1:调用服务结果返回失败");
+    }
+
+    @Test
+    void testDeposit() {
+
+        String accountNo = null;
+        long balance = 100;
+        AccountManageResult result = null;
+
+        //case1:个人账户存款
+        accountNo = "20000110235156";
+        result = accountManageFacade.deposit(accountNo, balance);
+        Assert.isTrue(result.isSuccess(), "调用服务结果返回失败");
+
+        //case2;企业账户存款
+        accountNo = "20000110232156";
+        result = accountManageFacade.deposit(accountNo, balance);
+        Assert.isTrue(result.isSuccess(), "调用服务结果返回失败");
+
     }
 }

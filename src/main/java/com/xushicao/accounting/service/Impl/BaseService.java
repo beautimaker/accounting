@@ -17,4 +17,5 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseService {
 
     private static Logger log = LoggerFactory.getLogger(BaseService.class);
+
 }

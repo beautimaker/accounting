@@ -45,6 +45,11 @@ public class ParaCheckUtil {
     public static final String ACCOUNT_NUMBER = "账号:number";
 
     /**
+     * 余额
+     */
+    public static final String ACCOUNT_AMOUNT = "金额:balance";
+
+    /**
      * 私有构造函数
      */
     private ParaCheckUtil() {

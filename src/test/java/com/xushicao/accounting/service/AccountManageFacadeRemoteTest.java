@@ -47,7 +47,9 @@ public class AccountManageFacadeRemoteTest {
      *
      * @throws Exception
      */
+    
     @Test
+
     public void remoteTestOpenAccount() {
 
         String requsetBody = null; //请求体对象，用于设置请求体

@@ -4,13 +4,8 @@
  */
 package com.xushicao.accounting.service.Impl;
 
-import com.xushicao.accounting.dao.entity.AccountChangeLogDO;
-import com.xushicao.accounting.dao.entity.AccountDO;
-import com.xushicao.accounting.dao.entity.InnerAccountInfoDO;
-import com.xushicao.accounting.dao.mapper.AccountChangeLogMapper;
-import com.xushicao.accounting.dao.mapper.AccountMapper;
-import com.xushicao.accounting.dao.mapper.InnerAccountInfoMapper;
-import com.xushicao.accounting.dao.mapper.SequenceMapper;
+import com.xushicao.accounting.dao.entity.*;
+import com.xushicao.accounting.dao.mapper.*;
 import com.xushicao.accounting.facade.req.AccountReq;
 import com.xushicao.accounting.model.enums.AccountingErrDtlEnum;
 import com.xushicao.accounting.model.exception.AccountingException;
@@ -23,8 +18,8 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.security.PrivateKey;
-import java.sql.SQLException;
+import java.sql.SQLOutput;
+
 
 /**
  * @author Shichao.xu
@@ -68,11 +63,23 @@ public class AccountServiceImpl implements AccountService {
     private TransactionTemplate transactionTemplate;
 
     /**
+     * 交易记录映射对象
+     */
+    @Autowired
+    private TransLogMapper transLogMapper;
+
+    /**
+     * 余额变动映射对象
+     */
+    @Autowired
+    private AccountLogMapper accountLogMapper;
+
+    /**
      * 开户方法
      * 完成数据库插入，实现开户
      *
-     * @param accountReq
-     * @return
+     * @param accountReq 用户请求
+     * @return 返回结果
      */
     @Override
     public String openAccount(AccountReq accountReq) {
@@ -114,7 +121,6 @@ public class AccountServiceImpl implements AccountService {
     public void freezeAccount(String accountNo) {
         //打印日志
         LOGGER.info("收到用户冻结账户请求:{}", accountNo);
-
         if (accountMapper.select(accountNo).getStatus().equals("F")) {
             throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已处于冻结状态");
         }
@@ -123,7 +129,8 @@ public class AccountServiceImpl implements AccountService {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
 
-                if (accountMapper.update(accountNo, "F") == 1) {
+                if (accountMapper.update(accountNo, "F") != 1) {
+
                     throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
                 }
                 accountChangeLogMapper.insert(buildAccountChangeLog(accountNo,
@@ -252,17 +259,18 @@ public class AccountServiceImpl implements AccountService {
 
         LOGGER.info("收到用户销户请求{}", accountNo);
 
-        AccountDO accountDO = accountMapper.select(accountNo);
-
-        if (accountDO.getBalance() != 0) {
-            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户存在余额，不能销户");
-        } else if (accountMapper.select(accountNo).getStatus().equals("C")) {
-            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已销户");
-        }
 
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
+                AccountDO accountDO = accountMapper.selectForUpdate(accountNo);
+
+                if (accountDO.getBalance() != 0) {
+                    throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户存在余额，不能销户");
+                } else if (accountDO.getStatus().equals("C")) {
+                    throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户已销户");
+                }
+
                 if (accountMapper.update(accountNo, "C") != 1) {
                     throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
                 }
@@ -273,5 +281,137 @@ public class AccountServiceImpl implements AccountService {
 
 
         LOGGER.info("处理用户销户请求结束{}", accountNo);
+    }
+
+    /**
+     * 存款方法重写
+     *
+     * @param accountNo 账户账号
+     * @param amount    存款金额
+     */
+    @Override
+    public void deposit(String accountNo, long amount) {
+
+        LOGGER.info("收到用户存款请求。账号：{}，存款：{}", accountNo, amount);
+
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+
+                long balance = 0;
+                long prevBalance = 0;
+                AccountDO accountDO = accountMapper.select(accountNo);
+                System.out.println(accountDO);
+                AccountLogDO accountLogDO = null;
+                TransLogDO transLogDO = null;
+                prevBalance = accountDO.getBalance();
+                balance = prevBalance + amount;
+                if (accountMapper.updateBalance(accountNo, balance, prevBalance) != 1) {
+                    throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                }
+
+                if (accountDO.getAccountType().equals("01")) {
+                    //个人总账账户添加
+                    prevBalance = accountMapper.select("001").getBalance();
+                    balance = prevBalance + amount;
+                    if (accountMapper.updateBalance("001", balance, prevBalance) != 1) {
+                        throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                    }
+                    //插入交易记录
+                    transLogDO = buildTransLog("001", accountNo, amount, "DEP", "01",
+                            accountDO.getCurrency());
+                    transLogMapper.insert(transLogDO);
+
+                    //插入余额变动记录
+                    accountLogDO = buildAccountLog(accountNo, "001", amount, "DEP", "" +
+                            "01", accountDO.getCurrency(), accountMapper.select(accountNo).getBalance());
+                    accountLogMapper.insert(accountLogDO);
+
+                    accountLogDO = buildAccountLog("001", accountNo, amount, "DEP", "" +
+                            "01", accountDO.getCurrency(), accountMapper.select("002").getBalance());
+                    accountLogMapper.insert(accountLogDO);
+
+                } else if (accountDO.getAccountType().equals("02")) {
+                    //企业总账账户添加
+                    prevBalance = accountMapper.select("002").getBalance();
+                    balance = prevBalance + amount;
+                    if (accountMapper.updateBalance("002", balance, prevBalance) != 1) {
+                        throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                    }
+                    //插入交易记录
+                    transLogDO = buildTransLog("002", accountNo, amount, "DEP", "01",
+                            accountDO.getCurrency());
+                    transLogMapper.insert(transLogDO);
+
+                    //插入余额变动记录
+                    accountLogDO = buildAccountLog(accountNo, "002", amount, "DEP", "" +
+                            "01", accountDO.getCurrency(), accountMapper.select(accountNo).getBalance());
+                    accountLogMapper.insert(accountLogDO);
+
+                    accountLogDO = buildAccountLog("002", accountNo, amount, "DEP", "" +
+                            "01", accountDO.getCurrency(), accountMapper.select("002").getBalance());
+                    accountLogMapper.insert(accountLogDO);
+                }
+            }
+        });
+        LOGGER.info("用户存款请求处理结束。账号：{}，存款：{}", accountNo, amount);
+    }
+
+    /**
+     * 生成交易记录实体对象
+     *
+     * @param debitAccountNo  借方账户
+     * @param creditAccountNo 贷方账户
+     * @param amount          金额
+     * @param transCode       交易代码
+     * @param subTransCode    交易子代码
+     * @param currency        币种
+     * @return 交易记录实体对象
+     */
+    private TransLogDO buildTransLog(String debitAccountNo, String creditAccountNo, long amount, String transCode
+            , String subTransCode, String currency) {
+        TransLogDO transLogDO = new TransLogDO();
+
+        transLogDO.setDebitAccountNo(debitAccountNo);
+        transLogDO.setCreditAccountNo(creditAccountNo);
+        transLogDO.setTransAmount(amount);
+        transLogDO.setTransCode(transCode);
+        transLogDO.setSubTransCode(subTransCode);
+        transLogDO.setReconInst("中国人民银行");
+        transLogDO.setOperatorID("760479708");
+        transLogDO.setOrderNo(Long.toString(sequenceMapper.getNextVal("order_seq")));
+        transLogDO.setId(Long.toString(sequenceMapper.getNextVal("translog_seq")));
+        transLogDO.setCurrency(currency);
+
+        return transLogDO;
+    }
+
+    /**
+     * 生成余额变动实体对象
+     *
+     * @param accountNo      账号
+     * @param otherAccountNo 对方账号
+     * @param amount         金额
+     * @param transCode      交易代码
+     * @param subTransCode   交易子代码
+     * @param currency       币种
+     * @param balance        余额
+     * @return 余额变动实体对象
+     */
+    private AccountLogDO buildAccountLog(String accountNo, String otherAccountNo, long amount, String transCode
+            , String subTransCode, String currency, long balance) {
+        AccountLogDO accountLogDO = new AccountLogDO();
+
+        accountLogDO.setAccountNo(accountNo);
+        accountLogDO.setOtherAccountNo(otherAccountNo);
+        accountLogDO.setTransAmount(amount);
+        accountLogDO.setTransCode(transCode);
+        accountLogDO.setSubTransCode(subTransCode);
+        accountLogDO.setReconInst("中国人民银行");
+        accountLogDO.setOperatorID("760479708");
+        accountLogDO.setOrderNo(Long.toString(sequenceMapper.getNextVal("order_seq")));
+        accountLogDO.setId(Long.toString(sequenceMapper.getNextVal("translog_seq")));
+        accountLogDO.setCurrency(currency);
+        return accountLogDO;
     }
 }

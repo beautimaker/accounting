@@ -16,6 +16,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AccountLogMapper {
 
+    /**
+     * 账户变动插入方法
+     * 通过传入的账户变动实体，向数据库中插入数据
+     *
+     * @param accountLogDO
+     */
     void insert(AccountLogDO accountLogDO);
 
 }

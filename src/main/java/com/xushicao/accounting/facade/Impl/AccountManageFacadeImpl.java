@@ -7,15 +7,13 @@ package com.xushicao.accounting.facade.Impl;
 
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.AccountReq;
-import com.xushicao.accounting.facade.result.AccountManageResult;
+import com.xushicao.accounting.facade.result.AccountResult;
 import com.xushicao.accounting.service.AccountService;
 import com.xushicao.accounting.template.TradeCallBack;
 import com.xushicao.accounting.template.TradeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 
 import static com.xushicao.accounting.util.ParaCheckUtil.*;
 
@@ -46,10 +44,10 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("account")
-    public AccountManageResult openAccount(@RequestBody AccountReq accountReq) {
+    public AccountResult openAccount(@RequestBody AccountReq accountReq) {
 
 
-        final AccountManageResult result = new AccountManageResult();
+        final AccountResult result = new AccountResult();
 
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
@@ -89,9 +87,9 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("freezeAccount")
-    public AccountManageResult freezeAccount(@RequestBody String accountNO) {
+    public AccountResult freezeAccount(@RequestBody String accountNO) {
 
-        final AccountManageResult result = new AccountManageResult();//创建结果对象
+        final AccountResult result = new AccountResult();//创建结果对象
 
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
@@ -117,9 +115,9 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("unFreezeAccount")
-    public AccountManageResult unFreezeAccount(@RequestBody String accountNo) {
+    public AccountResult unFreezeAccount(@RequestBody String accountNo) {
 
-        final AccountManageResult result = new AccountManageResult();
+        final AccountResult result = new AccountResult();
 
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
@@ -143,9 +141,9 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("closeAccount")
-    public AccountManageResult closeAccount(@RequestBody String accountNo) {
+    public AccountResult closeAccount(@RequestBody String accountNo) {
 
-        final AccountManageResult result = new AccountManageResult();
+        final AccountResult result = new AccountResult();
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
             public void checkParameter() {
@@ -170,8 +168,8 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      */
     @Override
     @PostMapping("deposit")
-    public AccountManageResult deposit(String accountNo, long amount) {
-        final AccountManageResult result = new AccountManageResult();
+    public AccountResult deposit(String accountNo, long amount) {
+        final AccountResult result = new AccountResult();
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
             public void checkParameter() {

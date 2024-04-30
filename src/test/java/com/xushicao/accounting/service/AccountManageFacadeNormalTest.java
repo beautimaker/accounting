@@ -9,7 +9,7 @@ package com.xushicao.accounting.service;
 import com.xushicao.accounting.dao.mapper.AccountMapper;
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.AccountReq;
-import com.xushicao.accounting.facade.result.AccountManageResult;
+import com.xushicao.accounting.facade.result.AccountResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,13 +28,6 @@ import org.springframework.util.Assert;
 public class AccountManageFacadeNormalTest {
 
     /**
-     * 开户映射接口
-     * 实现与数据库相关操作
-     */
-    @Autowired
-    AccountMapper accountMapper;
-
-    /**
      * 开户接口
      * 通过其调用开户方法
      */
@@ -50,7 +43,7 @@ public class AccountManageFacadeNormalTest {
     void testOpenAccount() {
 
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         // case1: 个人人民币账户正常开户
         accountReq.setAccountType("01");
@@ -96,7 +89,7 @@ public class AccountManageFacadeNormalTest {
     void testFreezeAccount() {
 
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         //case1: 正常账户冻结
         accountReq.setAccountNo("20000310201978");
@@ -115,7 +108,7 @@ public class AccountManageFacadeNormalTest {
     void testUnFreezeAccount() {
 
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         //case1: 正常账户解冻
         accountReq.setAccountNo("20000310198978");
@@ -132,7 +125,7 @@ public class AccountManageFacadeNormalTest {
     void testCloseAccount() {
 
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         //case1: 正常账户销户
         accountReq.setAccountNo("20000310195978");
@@ -145,7 +138,7 @@ public class AccountManageFacadeNormalTest {
 
         String accountNo = null;
         long balance = 100;
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         //case1:个人账户存款
         accountNo = "20000110235156";

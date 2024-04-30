@@ -5,7 +5,7 @@
 package com.xushicao.accounting.facade;
 
 import com.xushicao.accounting.facade.req.AccountReq;
-import com.xushicao.accounting.facade.result.AccountManageResult;
+import com.xushicao.accounting.facade.result.AccountResult;
 
 /**
  * 开户接口<br/>
@@ -26,7 +26,7 @@ public interface AccountManageFacade {
      * @param accountReq 开户请求
      * @return 开户结果
      */
-    AccountManageResult openAccount(AccountReq accountReq);
+    AccountResult openAccount(AccountReq accountReq);
 
     /**
      * 冻结方法
@@ -37,7 +37,7 @@ public interface AccountManageFacade {
      * @param accountNo 账户账号
      * @return
      */
-    AccountManageResult freezeAccount(String accountNo);
+    AccountResult freezeAccount(String accountNo);
 
 
     /**
@@ -49,7 +49,7 @@ public interface AccountManageFacade {
      * @param accountReq 用户请求
      * @return 返回结果
      */
-    AccountManageResult unFreezeAccount(String accountReq);
+    AccountResult unFreezeAccount(String accountReq);
 
     /**
      * 销户方法
@@ -60,7 +60,7 @@ public interface AccountManageFacade {
      * @param accountNo 用户账号
      * @return 返回结果
      */
-    AccountManageResult closeAccount(String accountNo);
+    AccountResult closeAccount(String accountNo);
 
     /**
      * 存款方法
@@ -71,5 +71,5 @@ public interface AccountManageFacade {
      * @param accountNo 用户账号
      * @return
      */
-    AccountManageResult deposit(String accountNo, long amount);
+    AccountResult deposit(String accountNo, long amount);
 }

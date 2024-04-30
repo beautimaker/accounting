@@ -13,12 +13,11 @@ import com.xushicao.accounting.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.sql.SQLOutput;
 
 
 /**
@@ -412,6 +411,99 @@ public class AccountServiceImpl implements AccountService {
         accountLogDO.setOrderNo(Long.toString(sequenceMapper.getNextVal("order_seq")));
         accountLogDO.setId(Long.toString(sequenceMapper.getNextVal("translog_seq")));
         accountLogDO.setCurrency(currency);
+        accountLogDO.setBalance(balance);
         return accountLogDO;
     }
+
+    /**
+     * 取款实现方法
+     *
+     * @param accountNo 账号
+     * @param amount    金额
+     */
+    @Override
+    public void withdraw(String accountNo, long amount) {
+
+        LOGGER.info("收到用户取款请求：账号{} 金额{}", accountNo, amount);
+
+        AccountDO accountDO = accountMapper.select(accountNo);
+        long balance = accountDO.getBalance();
+
+        if (accountDO.getBalance() < amount) {
+            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "账户余额不足");
+        }
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            String totalAccountNo;
+
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                if (accountMapper.updateBalance(accountNo, balance - amount, balance) != 1) {
+                    throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                }
+                if (accountDO.getAccountType().equals("01")) {
+                    totalAccountNo = "001";
+                } else if (accountDO.getAccountType().equals("02")) {
+                    totalAccountNo = "002";
+                }
+                transLogMapper.insert(buildTransLog(accountNo, totalAccountNo, amount, "WDL",
+                        "01", accountDO.getCurrency()));
+
+                accountLogMapper.insert(buildAccountLog(accountNo, totalAccountNo, amount, "WDL",
+                        "01", accountDO.getCurrency(), balance - amount));
+
+                accountLogMapper.insert(buildAccountLog(totalAccountNo, accountNo, amount, "WDL",
+                        "01", accountDO.getCurrency(), balance - amount));
+
+            }
+        });
+
+        LOGGER.info("用户取款请求处理结束：账号{} 金额{}", accountNo, amount);
+    }
+
+    @Override
+    public void transfer(String accountFromNo, String accountToNo, long amount) {
+
+        LOGGER.info("收到用户转账请求：转出账户{} 转入账户{}", accountFromNo, accountToNo);
+
+        AccountDO accountFromDO = accountMapper.select(accountFromNo);
+        AccountDO accountToDO = accountMapper.select(accountToNo);
+
+        if (accountFromDO.getAccountType().equals("03") || accountToDO.getAccountType().equals("03")) {
+            throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, "转账账户不能为内部户");
+        }
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                if (accountMapper.updateBalance(accountFromNo, accountFromDO.getBalance() - amount,
+                        accountFromDO.getBalance()) != 1 || accountMapper.updateBalance(accountToNo,
+                        accountToDO.getBalance() + amount, accountToDO.getBalance()) != 1) {
+                    throw new AccountingException(AccountingErrDtlEnum.DB_EXCEPTION, "修改数据条数不对应");
+                }
+                //生成交易记录
+                transLogMapper.insert(buildTransLog(accountFromNo, accountToNo, amount, "XFR", "01"
+                        , "156"));
+                //生成账户变动记录
+                accountLogMapper.insert(buildAccountLog(accountFromNo, accountToNo, amount, "XFR", "01"
+                        , "156", accountFromDO.getBalance() - amount));
+                accountLogMapper.insert(buildAccountLog(accountToNo, accountFromNo, amount, "XFR", "01"
+                        , "156", accountToDO.getBalance() + amount));
+            }
+        });
+        LOGGER.info("用户转账请求处理结束：转出账户{} 转入账户{}", accountFromNo, accountToNo);
+    }
+
+    @Override
+    public AccountDO queryAccount(String accountNo) {
+
+        LOGGER.info("收到用户查询账户请求：账号{}", accountNo);
+
+        AccountDO accountDO = accountMapper.select(accountNo);
+
+        LOGGER.info("用户查询账户请求处理结束：账号{}", accountNo);
+
+        return accountDO;
+
+
+    }
+
 }

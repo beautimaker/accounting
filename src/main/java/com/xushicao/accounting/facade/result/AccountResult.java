@@ -6,12 +6,13 @@ package com.xushicao.accounting.facade.result;
 
 
 import com.xushicao.accounting.common.ErrorContext;
+import com.xushicao.accounting.dao.entity.AccountDO;
 
 /**
  * @author Shichao.xu
  * @version $ AccountManageResult , V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
-public class AccountManageResult {
+public class AccountResult {
 
     /**
      * 账号生成规则：固定前缀+账号类型+序列号+币种<br/>
@@ -26,6 +27,12 @@ public class AccountManageResult {
      * <li>03-用户类型或者币种不在给定范围内</>
      */
     private ErrorContext errorContext;
+
+
+    /**
+     * 账户实体类，包含账户所有信息
+     */
+    private AccountDO accountDO;
 
     /**
      * 成功标记<br>
@@ -55,5 +62,13 @@ public class AccountManageResult {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public AccountDO getAccountDO() {
+        return accountDO;
+    }
+
+    public void setAccountDO(AccountDO accountDO) {
+        this.accountDO = accountDO;
     }
 }

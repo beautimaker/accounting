@@ -4,7 +4,9 @@
  */
 package com.xushicao.accounting.service;
 
+import com.xushicao.accounting.dao.entity.AccountDO;
 import com.xushicao.accounting.facade.req.AccountReq;
+import com.xushicao.accounting.facade.result.AccountResult;
 
 import java.sql.SQLException;
 
@@ -58,11 +60,41 @@ public interface AccountService {
 
     /**
      * 存款方法
-     * 通过传入账户账号，判断账户为个人账户，还是、
+     * 通过传入账户账号，判断账户为个人账户，还是、企业账户
      * 企业账户，根据传入金额，同时向账户和总账账户添加存款
      *
      * @param accountNo 账户账号
-     * @param balance   存款金额
+     * @param amount    存款金额
      */
-    void deposit(String accountNo, long balance);
+    void deposit(String accountNo, long amount);
+
+    /**
+     * 取款方法接口
+     * 通过传入账户账号，判断账户是个人还是企业账户
+     * 根据传入金额，同时向账户和总账账户添加存款
+     *
+     * @param accountNo
+     * @param amount
+     */
+    void withdraw(String accountNo, long amount);
+
+    /**
+     * 转账方法接口
+     * 将传入的金额，更新转入账户和转出账户的余额
+     *
+     * @param accountFromNo 转入账户账号
+     * @param accountToNo   转出账户账号
+     * @param amount        金额
+     */
+    void transfer(String accountFromNo, String accountToNo, long amount);
+
+    /**
+     * 账户查询方法
+     * 通过传入的账号，获取账户实体类，返回账户信息
+     *
+     * @param accountNo 账号
+     * @return 账户实体类
+     */
+    AccountDO queryAccount(String accountNo);
+
 }

@@ -47,7 +47,7 @@ public class ParaCheckUtil {
     /**
      * 余额
      */
-    public static final String ACCOUNT_AMOUNT = "金额:balance";
+    public static final String ACCOUNT_AMOUNT = "金额:amount";
 
     /**
      * 私有构造函数
@@ -59,8 +59,8 @@ public class ParaCheckUtil {
     /**
      * 检查请求对象是否为空
      *
-     * @param para
-     * @param paraName
+     * @param para     检查对象
+     * @param paraName 提醒信息
      */
     public static void checkParamNotNull(Object para, String paraName) {
         if (para == null) {

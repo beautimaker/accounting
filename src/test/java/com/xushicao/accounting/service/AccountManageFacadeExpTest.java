@@ -6,7 +6,7 @@ package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.facade.AccountManageFacade;
 import com.xushicao.accounting.facade.req.AccountReq;
-import com.xushicao.accounting.facade.result.AccountManageResult;
+import com.xushicao.accounting.facade.result.AccountResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +38,7 @@ public class AccountManageFacadeExpTest {
     void expTestOpenAccount() {
 
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
 
         // case1: 开户请求对象为空异常
@@ -78,7 +78,7 @@ public class AccountManageFacadeExpTest {
     @Test
     void expTestFreezeAccount() {
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         //case1: 冻结账户账户冻结
         accountReq.setAccountNo("20000310192978");
@@ -94,7 +94,7 @@ public class AccountManageFacadeExpTest {
     @Test
     void expTestUnFreezeAccount() {
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         //case1: 解冻账户解冻
         accountReq.setAccountNo("20000310189978");
@@ -111,7 +111,7 @@ public class AccountManageFacadeExpTest {
     void expTestCloseAccount() {
 
         AccountReq accountReq = new AccountReq();
-        AccountManageResult result = null;
+        AccountResult result = null;
 
         //case1: 销户账户销户
         accountReq.setAccountNo("20000310170978");

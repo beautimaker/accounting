@@ -5,11 +5,12 @@
         <id property="accountNo" column="account_no"/>
         <result property="accountName" column="account_name"/>
         <result column="account_type" property="accountType"/>
+        <result column="balance_direction" property="direction"/>
     </resultMap>
     <insert id="insert">
-        insert into account (account_no, account_name, account_type, status, balance, create_time, update_time,
+        insert into account (account_no, account_name, account_type, status, balance, create_time,
                              currency)
-        values (#{accountNo}, #{accountName}, #{accountType}, #{status}, #{balance}, now(), now(),
+        values (#{accountNo}, #{accountName}, #{accountType}, #{status}, #{balance}, now(),
                 #{currency})
     </insert>
 
@@ -19,23 +20,26 @@
         where account_no = #{accountNo};
     </select>
 
-    <select id="selectForUpdate" resultType="AccountDO">
+    <select id="selectForUpdate" resultMap="accountResultMap">
         select *
         from account
         where account_no = #{accountNo} for
-        update;
+        update NOWAIT
     </select>
 
     <update id="update">
         update account
-        set status=#{status}
+        set status=#{status},
+            update_time=NOW()
         where account_no = #{accountNo};
     </update>
 
     <update id="updateBalance">
         update account
         set balance=#{balance},
-            prev_balance=#{prevBalance}
+            prev_balance=#{prevBalance},
+            prev_trans_date=now(),
+            update_time=now()
         where account_no = #{accountNo};
     </update>
 

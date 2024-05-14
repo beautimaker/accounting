@@ -4,6 +4,9 @@
  */
 package com.xushicao.accounting.dao.entity;
 
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -43,22 +46,35 @@ public class AccountDO {
     /**
      * 修改时间
      */
-    private Date lastTransTime;
+    private LocalDateTime lastTransTime;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 币种
      */
     private String currency;
+
+    /**
+     * 余额方向
+     */
+    private String direction;
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
     public String getAccountNo() {
         return accountNo;
@@ -100,7 +116,7 @@ public class AccountDO {
         this.balance = balance;
     }
 
-    public Date getLast_trans_time() {
+    public LocalDateTime getLast_trans_time() {
         return lastTransTime;
     }
 
@@ -110,6 +126,30 @@ public class AccountDO {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public LocalDateTime getLastTransTime() {
+        return lastTransTime;
+    }
+
+    public void setLastTransTime(LocalDateTime lastTransTime) {
+        this.lastTransTime = lastTransTime;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override

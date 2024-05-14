@@ -14,7 +14,7 @@ package com.xushicao.accounting.facade.req;
  * @version $ OpenAccountReq, V0.1 2024/4/8 12:56 Shichao.xu Exp $
  */
 
-public class AccountReq {
+public class AccountManageReq {
 
     /**
      * 用户账号

@@ -7,6 +7,7 @@ package com.xushicao.accounting.service;
 import com.xushicao.accounting.facade.AccountQueryFacade;
 import com.xushicao.accounting.facade.result.AccountResult;
 
+import com.xushicao.accounting.facade.result.QueryResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +28,7 @@ public class AccountQueryFacadeNormalTest {
     @Test
     void testQueryAccount() {
 
-        AccountResult result;
+        QueryResult result;
 
         //case1 正常账户查询
         String accountNo = "20000310240978";

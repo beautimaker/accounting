@@ -6,6 +6,7 @@ package com.xushicao.accounting.template;
 
 import com.xushicao.accounting.common.ErrorContext;
 import com.xushicao.accounting.facade.result.AccountResult;
+import com.xushicao.accounting.facade.result.BaseResult;
 import com.xushicao.accounting.model.enums.AccountingErrDtlEnum;
 import com.xushicao.accounting.model.enums.AccountingErrScenarioEnum;
 import com.xushicao.accounting.model.exception.AccountingException;
@@ -32,7 +33,7 @@ public class AbstractTemplate {
      *
      * @param result 处理结果
      */
-    protected static void buildSuccessResponse(AccountResult result) {
+    protected static void buildSuccessResponse(BaseResult result) {
         result.setSuccess(true);
     }
 
@@ -43,7 +44,7 @@ public class AbstractTemplate {
      * @param scenarioEnum   错误场景
      * @param transException 业务异常
      */
-    protected static void buildFailureResponse(AccountResult result,
+    protected static void buildFailureResponse(BaseResult result,
                                                AccountingErrScenarioEnum scenarioEnum,
                                                AccountingException transException) {
         result.setSuccess(false);
@@ -59,7 +60,7 @@ public class AbstractTemplate {
      * @param detailEnum   错误明细枚举
      * @param errorMsg     错误信息
      */
-    protected static void buildFailureResponse(AccountResult result,
+    protected static void buildFailureResponse(BaseResult result,
                                                AccountingErrScenarioEnum scenarioEnum,
                                                AccountingErrDtlEnum detailEnum, String errorMsg) {
         result.setSuccess(false);

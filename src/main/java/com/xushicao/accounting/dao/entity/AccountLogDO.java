@@ -4,6 +4,8 @@
  */
 package com.xushicao.accounting.dao.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -46,6 +48,9 @@ public class AccountLogDO {
 
     /**
      * 交易代码
+     * DEP-存款
+     * WDL-取款
+     * XFR-转账
      */
     private String transCode;
 
@@ -57,17 +62,17 @@ public class AccountLogDO {
     /**
      * 交易日前
      */
-    private Date transDate;
+    private LocalDate transDate;
 
     /**
      * 交易时间
      */
-    private Date transDT;
+    private LocalDateTime transDT;
 
     /**
      * 外部业务时间
      */
-    private Date outDate;
+    private LocalDateTime outDate;
 
     /**
      * 业务编号
@@ -97,12 +102,13 @@ public class AccountLogDO {
     /**
      * 创建时间
      */
-    private Date gmtCreate;
+    private LocalDateTime gmtCreate;
 
     /**
      * 修改时间
      */
-    private Date gmtModified;
+    private LocalDateTime gmtModified;
+
 
     public String getId() {
         return id;
@@ -168,27 +174,27 @@ public class AccountLogDO {
         this.subTransCode = subTransCode;
     }
 
-    public Date getTransDate() {
+    public LocalDate getTransDate() {
         return transDate;
     }
 
-    public void setTransDate(Date transDate) {
+    public void setTransDate(LocalDate transDate) {
         this.transDate = transDate;
     }
 
-    public Date getTransDT() {
+    public LocalDateTime getTransDT() {
         return transDT;
     }
 
-    public void setTransDT(Date transDT) {
+    public void setTransDT(LocalDateTime transDT) {
         this.transDT = transDT;
     }
 
-    public Date getOutDate() {
+    public LocalDateTime getOutDate() {
         return outDate;
     }
 
-    public void setOutDate(Date outDate) {
+    public void setOutDate(LocalDateTime outDate) {
         this.outDate = outDate;
     }
 
@@ -232,19 +238,19 @@ public class AccountLogDO {
         this.operatorID = operatorID;
     }
 
-    public Date getGmtCreate() {
+    public LocalDateTime getGmtCreate() {
         return gmtCreate;
     }
 
-    public void setGmtCreate(Date gmtCreate) {
+    public void setGmtCreate(LocalDateTime gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
 
-    public Date getGmtModified() {
+    public LocalDateTime getGmtModified() {
         return gmtModified;
     }
 
-    public void setGmtModified(Date gmtModified) {
+    public void setGmtModified(LocalDateTime gmtModified) {
         this.gmtModified = gmtModified;
     }
 }

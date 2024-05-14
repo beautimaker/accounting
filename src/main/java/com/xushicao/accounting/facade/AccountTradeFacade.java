@@ -4,10 +4,10 @@
  */
 package com.xushicao.accounting.facade;
 
-import com.xushicao.accounting.dao.entity.AccountDO;
+import com.xushicao.accounting.facade.req.DepositReq;
+import com.xushicao.accounting.facade.req.TransferReq;
+import com.xushicao.accounting.facade.req.WithdrawReq;
 import com.xushicao.accounting.facade.result.AccountResult;
-import com.xushicao.accounting.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 账户操作门面接口
@@ -24,11 +24,10 @@ public interface AccountTradeFacade {
      * 使用交易模板实现取款服务
      * 返回结果
      *
-     * @param accountNo
-     * @param amount
-     * @return
+     * @param withdrawReq 取款请求
+     * @return 返回结果
      */
-    AccountResult withdraw(String accountNo, long amount);
+    AccountResult withdraw(WithdrawReq withdrawReq);
 
 
     /**
@@ -36,10 +35,19 @@ public interface AccountTradeFacade {
      * 通过传入的转入账号和转出账号以及金额
      * 根据金额分别更新对应账户的余额，同时插入交易记录表，账户变动表
      *
-     * @param accountFromNo 转出账号
-     * @param AccountToNo   转入账号
-     * @param amount        金额
+     * @param transferReq 转账请求
      * @return 返回结果
      */
-    AccountResult transfer(String accountFromNo, String AccountToNo, long amount);
+    AccountResult transfer(TransferReq transferReq);
+
+    /**
+     * 存款方法
+     * 通过账号账号, 判断账号是是企业用户还是
+     * 个人用户，根据存款金额同时添加到账户和总账账户中
+     * 并返回存款结果
+     *
+     * @param depositReq 存款请求
+     * @return 返回结果
+     */
+    AccountResult deposit(DepositReq depositReq);
 }

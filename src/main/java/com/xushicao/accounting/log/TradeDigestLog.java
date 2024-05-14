@@ -4,7 +4,7 @@
  */
 package com.xushicao.accounting.log;
 
-import com.xushicao.accounting.facade.req.AccountReq;
+import com.xushicao.accounting.facade.req.AccountManageReq;
 
 /**
  * @author Shichao.xu
@@ -12,9 +12,9 @@ import com.xushicao.accounting.facade.req.AccountReq;
  */
 
 final public class TradeDigestLog {
-    public TradeDigestLog(AccountReq accountReq) {
+    public TradeDigestLog(AccountManageReq accountManageReq) {
 
-        if (accountReq == null) {
+        if (accountManageReq == null) {
             return;
         }
 

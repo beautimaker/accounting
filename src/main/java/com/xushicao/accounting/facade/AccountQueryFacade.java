@@ -4,8 +4,8 @@
  */
 package com.xushicao.accounting.facade;
 
-import com.xushicao.accounting.dao.entity.AccountDO;
 import com.xushicao.accounting.facade.result.AccountResult;
+import com.xushicao.accounting.facade.result.QueryResult;
 
 /**
  * 账户查询门面接口
@@ -21,6 +21,6 @@ public interface AccountQueryFacade {
      * @param accountNo 账号
      * @return 账户实体类
      */
-    AccountResult QueryAccount(String accountNo);
+    QueryResult QueryAccount(String accountNo);
 
 }

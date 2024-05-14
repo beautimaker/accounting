@@ -6,7 +6,7 @@
 package com.xushicao.accounting.facade.Impl;
 
 import com.xushicao.accounting.facade.AccountManageFacade;
-import com.xushicao.accounting.facade.req.AccountReq;
+import com.xushicao.accounting.facade.req.AccountManageReq;
 import com.xushicao.accounting.facade.result.AccountResult;
 import com.xushicao.accounting.service.AccountService;
 import com.xushicao.accounting.template.TradeCallBack;
@@ -39,12 +39,12 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      * 开户方法的重写<br/>
      * 用于实现开户
      *
-     * @param accountReq 开户请求
+     * @param accountManageReq 开户请求
      * @return 开户结果
      */
     @Override
     @PostMapping("account")
-    public AccountResult openAccount(@RequestBody AccountReq accountReq) {
+    public AccountResult openAccount(@RequestBody AccountManageReq accountManageReq) {
 
 
         final AccountResult result = new AccountResult();
@@ -53,23 +53,23 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
             @Override
             public void checkParameter() {
 
-                checkParamNotNull(accountReq, USER_REQUEST);
+                checkParamNotNull(accountManageReq, USER_REQUEST);
 
-                checkParaNotBlank(accountReq.getAccountType(), ACCOUNT_TYPE);
-                checkParaMatch(accountReq.getAccountType(), ACCOUNT_TYPE);
+                checkParaNotBlank(accountManageReq.getAccountType(), ACCOUNT_TYPE);
+                checkParaMatch(accountManageReq.getAccountType(), ACCOUNT_TYPE);
 
-                checkParaNotBlank(accountReq.getCurrency(), ACCOUNT_CURRENCY);
-                checkParaMatch(accountReq.getCurrency(), ACCOUNT_CURRENCY);
+                checkParaNotBlank(accountManageReq.getCurrency(), ACCOUNT_CURRENCY);
+                checkParaMatch(accountManageReq.getCurrency(), ACCOUNT_CURRENCY);
 
-                if (accountReq.getAccountType().equals("03")) {
-                    checkParaNotBlank(accountReq.getAccountName(), ACCOUNT_NAME);
+                if (accountManageReq.getAccountType().equals("03")) {
+                    checkParaNotBlank(accountManageReq.getAccountName(), ACCOUNT_NAME);
                 }
 
             }
 
             @Override
             public void doTrade() {
-                String accountNo = accountService.openAccount(accountReq);
+                String accountNo = accountService.openAccount(accountManageReq);
                 result.setAccountNo(accountNo);
             }
 
@@ -111,7 +111,7 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
      * 解冻账户方法重写
      *
      * @param accountNo 用户账号
-     * @return
+     * @return 返回结果
      */
     @Override
     @PostMapping("unFreezeAccount")
@@ -159,29 +159,5 @@ public class AccountManageFacadeImpl implements AccountManageFacade {
         return result;
     }
 
-    /**
-     * 存款方法重写
-     *
-     * @param accountNo 用户账号
-     * @param amount    存款金额
-     * @return 返回结果
-     */
-    @Override
-    @PostMapping("deposit")
-    public AccountResult deposit(String accountNo, long amount) {
-        final AccountResult result = new AccountResult();
-        TradeTemplate.trade(result, new TradeCallBack() {
-            @Override
-            public void checkParameter() {
-                checkParaNotBlank(accountNo, ACCOUNT_NUMBER);
-                checkParamNotNull(amount, ACCOUNT_AMOUNT);
-            }
 
-            @Override
-            public void doTrade() {
-                accountService.deposit(accountNo, amount);
-            }
-        });
-        return result;
-    }
 }

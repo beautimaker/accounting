@@ -8,7 +8,9 @@ import com.xushicao.accounting.dao.entity.AccountDO;
 import com.xushicao.accounting.facade.AccountQueryFacade;
 import com.xushicao.accounting.facade.result.AccountResult;
 
+import com.xushicao.accounting.facade.result.QueryResult;
 import com.xushicao.accounting.service.AccountService;
+import com.xushicao.accounting.service.QueryService;
 import com.xushicao.accounting.template.QueryCallBack;
 import com.xushicao.accounting.template.QueryTemplate;
 
@@ -31,7 +33,7 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
      * 服务类对象
      */
     @Autowired
-    AccountService accountService;
+    QueryService queryService;
 
     /**
      * 查询账户方法重写
@@ -41,9 +43,9 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
      */
     @Override
     @PostMapping("queryAccount")
-    public AccountResult QueryAccount(String accountNo) {
+    public QueryResult QueryAccount(String accountNo) {
 
-        final AccountResult result = new AccountResult();
+        final QueryResult result = new QueryResult();
         QueryTemplate.query(result, new QueryCallBack() {
             @Override
             public void checkParameter() {
@@ -52,7 +54,7 @@ public class AccountQueryFacadeImpl implements AccountQueryFacade {
 
             @Override
             public void doQuery() {
-                AccountDO accountDO = accountService.queryAccount(accountNo);
+                AccountDO accountDO = queryService.queryAccount(accountNo);
                 result.setAccountDO(accountDO);
             }
         });

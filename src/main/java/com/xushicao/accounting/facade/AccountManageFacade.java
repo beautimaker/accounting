@@ -4,7 +4,7 @@
  */
 package com.xushicao.accounting.facade;
 
-import com.xushicao.accounting.facade.req.AccountReq;
+import com.xushicao.accounting.facade.req.AccountManageReq;
 import com.xushicao.accounting.facade.result.AccountResult;
 
 /**
@@ -23,10 +23,10 @@ public interface AccountManageFacade {
      * 并且返回用户账号到返回结果对象中
      * 返回对象中含有开户是否的成功的属性success
      *
-     * @param accountReq 开户请求
+     * @param accountManageReq 开户请求
      * @return 开户结果
      */
-    AccountResult openAccount(AccountReq accountReq);
+    AccountResult openAccount(AccountManageReq accountManageReq);
 
     /**
      * 冻结方法
@@ -35,7 +35,7 @@ public interface AccountManageFacade {
      * 使用trade模板检查异常和建立返回结果
      *
      * @param accountNo 账户账号
-     * @return
+     * @return 返回结果
      */
     AccountResult freezeAccount(String accountNo);
 
@@ -62,14 +62,5 @@ public interface AccountManageFacade {
      */
     AccountResult closeAccount(String accountNo);
 
-    /**
-     * 存款方法
-     * 通过账号账号, 判断账号是是企业用户还是
-     * 个人用户，根据存款金额同时添加到账户和总账账户中
-     * 并返回存款结果
-     *
-     * @param accountNo 用户账号
-     * @return
-     */
-    AccountResult deposit(String accountNo, long amount);
+
 }

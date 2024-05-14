@@ -5,7 +5,7 @@
 package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.facade.AccountManageFacade;
-import com.xushicao.accounting.facade.req.AccountReq;
+import com.xushicao.accounting.facade.req.AccountManageReq;
 import com.xushicao.accounting.facade.result.AccountResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class AccountManageFacadeExpTest {
     @Test
     void expTestOpenAccount() {
 
-        AccountReq accountReq = new AccountReq();
+        AccountManageReq accountManageReq = new AccountManageReq();
         AccountResult result = null;
 
 
@@ -50,21 +50,21 @@ public class AccountManageFacadeExpTest {
 
 
         // case2: 账户类型为内部户时账户名为空异常
-        accountReq.setAccountType("03");
-        accountReq.setCurrency("156");
+        accountManageReq.setAccountType("03");
+        accountManageReq.setCurrency("156");
 
-        result = accountManageFacade.openAccount(accountReq);
+        result = accountManageFacade.openAccount(accountManageReq);
         Assert.isTrue(!result.isSuccess(), "case2:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case2:返回账户存在");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "case:异常类型不为账户类型为内部户时账户名为空");
 
 
         //case3:账户类型或币种参数不在给定范围内
-        accountReq.setAccountName("xushichao");
-        accountReq.setAccountType("06");
-        accountReq.setCurrency("123");
+        accountManageReq.setAccountName("xushichao");
+        accountManageReq.setAccountType("06");
+        accountManageReq.setCurrency("123");
 
-        result = accountManageFacade.openAccount(accountReq);
+        result = accountManageFacade.openAccount(accountManageReq);
         Assert.isTrue(!result.isSuccess(), "case3:调用服务结果返回成功");
         Assert.isNull(result.getAccountNo(), "case3:返回账户存在");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "case3:异常类型不为账户类型或币种参数不在给定范围");
@@ -77,13 +77,13 @@ public class AccountManageFacadeExpTest {
      */
     @Test
     void expTestFreezeAccount() {
-        AccountReq accountReq = new AccountReq();
+        AccountManageReq accountManageReq = new AccountManageReq();
         AccountResult result = null;
 
         //case1: 冻结账户账户冻结
-        accountReq.setAccountNo("20000310192978");
+        accountManageReq.setAccountNo("20000310192978");
 
-        result = accountManageFacade.freezeAccount(accountReq.getAccountNo());
+        result = accountManageFacade.freezeAccount(accountManageReq.getAccountNo());
         Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户已冻结");
     }
@@ -93,13 +93,13 @@ public class AccountManageFacadeExpTest {
      */
     @Test
     void expTestUnFreezeAccount() {
-        AccountReq accountReq = new AccountReq();
+        AccountManageReq accountManageReq = new AccountManageReq();
         AccountResult result = null;
 
         //case1: 解冻账户解冻
-        accountReq.setAccountNo("20000310189978");
+        accountManageReq.setAccountNo("20000310189978");
 
-        result = accountManageFacade.unFreezeAccount(accountReq.getAccountNo());
+        result = accountManageFacade.unFreezeAccount(accountManageReq.getAccountNo());
         Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户已解冻");
     }
@@ -110,13 +110,13 @@ public class AccountManageFacadeExpTest {
     @Test
     void expTestCloseAccount() {
 
-        AccountReq accountReq = new AccountReq();
+        AccountManageReq accountManageReq = new AccountManageReq();
         AccountResult result = null;
 
         //case1: 销户账户销户
-        accountReq.setAccountNo("20000310170978");
+        accountManageReq.setAccountNo("20000310170978");
 
-        result = accountManageFacade.closeAccount(accountReq.getAccountNo());
+        result = accountManageFacade.closeAccount(accountManageReq.getAccountNo());
         Assert.isTrue(!result.isSuccess(), "case1:调用服务结果返回成功");
         Assert.isTrue(result.getErrorContext().getCodeStr().equals("XU0100002101"), "异常类型不为账户存在余额");
     }

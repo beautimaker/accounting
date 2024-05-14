@@ -5,10 +5,13 @@
 package com.xushicao.accounting.template;
 
 import com.xushicao.accounting.facade.result.AccountResult;
+import com.xushicao.accounting.facade.result.QueryResult;
 import com.xushicao.accounting.model.enums.AccountingErrDtlEnum;
 import com.xushicao.accounting.model.enums.AccountingErrScenarioEnum;
 import com.xushicao.accounting.model.exception.AccountingException;
 import org.springframework.dao.DataAccessException;
+
+import javax.management.Query;
 
 /**
  * 查询模板类
@@ -23,7 +26,7 @@ public class QueryTemplate extends AbstractTemplate {
      */
     public static final AccountingErrScenarioEnum ERR_SCENARIO = AccountingErrScenarioEnum.QUERY;
 
-    public static void query(AccountResult result, QueryCallBack callBack) {
+    public static void query(QueryResult result, QueryCallBack callBack) {
         try {
             callBack.checkParameter();
             callBack.doQuery();

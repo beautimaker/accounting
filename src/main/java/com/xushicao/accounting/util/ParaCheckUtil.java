@@ -4,11 +4,17 @@
  */
 package com.xushicao.accounting.util;
 
+import com.xushicao.accounting.dao.entity.AccountDO;
 import com.xushicao.accounting.domain.enums.AccountCurrencyEnum;
 import com.xushicao.accounting.domain.enums.AccountTypeEnum;
+import com.xushicao.accounting.facade.req.TransReq;
+import com.xushicao.accounting.facade.req.TransferReq;
 import com.xushicao.accounting.model.enums.AccountingErrDtlEnum;
 import com.xushicao.accounting.model.exception.AccountingException;
 import org.springframework.util.StringUtils;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 参数校验工具类
@@ -50,6 +56,53 @@ public class ParaCheckUtil {
     public static final String ACCOUNT_AMOUNT = "金额:amount";
 
     /**
+     * 操作员ID
+     */
+    public static final String ACCOUNT_OPERATOR_ID = "操作员ID";
+
+    /**
+     * 订单号
+     */
+    public static String ACCOUNT_ORDER_NO = "订单号:orderNo";
+
+    /**
+     * 核算机构
+     */
+    public static final String RECON_INST = "核算机构:reconInst";
+
+    /**
+     * 交易日期
+     */
+    public static final String TRANS_DATE = "交易日期:transDate";
+
+    /**
+     * 交易时间
+     */
+    public static final String TRANS_D_T = "交易时间:transDT";
+
+    /**
+     * 交易代码
+     * DEP-存款
+     * WDL-取款
+     * XFR-转账
+     */
+    public static final String TRANS_CODE = "交易代码:transCode";
+
+    /**
+     * 交易子代码
+     * 01-现金存款，现金取款，同行转账
+     * 02-支票存款，支票取款，跨行转账
+     * 03-电子转账存款，ATM取款，境外转账
+     */
+    public static final String SUB_TRANS_CODE = "交易子代码:subTransCode";
+
+    /**
+     * 外部业务时间
+     */
+    public static final String OUT_DATE = "外部业务时间:outDate";
+
+
+    /**
      * 私有构造函数
      */
     private ParaCheckUtil() {
@@ -89,5 +142,20 @@ public class ParaCheckUtil {
                 throw new AccountingException(AccountingErrDtlEnum.REQ_PARAM_NOT_VALID, msg);
             }
         }
+    }
+
+    public static void checkTransParams(TransReq transReq) {
+        checkParamNotNull(transReq.getAmount(), ACCOUNT_AMOUNT);
+        checkParamNotNull(transReq.getAmount(), ACCOUNT_AMOUNT);
+        checkParaNotBlank(transReq.getOperatorID(), ACCOUNT_OPERATOR_ID);
+        checkParaNotBlank(transReq.getOrderNo(), ACCOUNT_ORDER_NO);
+        checkParaNotBlank(transReq.getReconInst(), RECON_INST);
+        checkParamNotNull(transReq.getTransDate(), TRANS_DATE);
+        checkParamNotNull(transReq.getTransDT(), TRANS_D_T);
+        checkParaNotBlank(transReq.getTransCode(), TRANS_CODE);
+        //添加参数是否匹配
+        checkParaNotBlank(transReq.getSubTransCode(), SUB_TRANS_CODE);
+        //添加参数是否匹配
+        checkParamNotNull(transReq.getOutDate(), OUT_DATE);
     }
 }

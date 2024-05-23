@@ -5,6 +5,7 @@
 package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.facade.req.DepositReq;
+import com.xushicao.accounting.service.Impl.BaseService;
 
 /**
  * 存款服务接口
@@ -21,7 +22,7 @@ public interface DepositService {
      *
      * @param depositReq 账户账号
      */
-    void deposit(DepositReq depositReq);
+    BaseService.TransInfo deposit(DepositReq depositReq);
 
 
 }

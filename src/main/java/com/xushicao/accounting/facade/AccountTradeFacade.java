@@ -7,7 +7,7 @@ package com.xushicao.accounting.facade;
 import com.xushicao.accounting.facade.req.DepositReq;
 import com.xushicao.accounting.facade.req.TransferReq;
 import com.xushicao.accounting.facade.req.WithdrawReq;
-import com.xushicao.accounting.facade.result.AccountResult;
+import com.xushicao.accounting.facade.result.*;
 
 /**
  * 账户操作门面接口
@@ -27,7 +27,7 @@ public interface AccountTradeFacade {
      * @param withdrawReq 取款请求
      * @return 返回结果
      */
-    AccountResult withdraw(WithdrawReq withdrawReq);
+    BaseResult withdraw(WithdrawReq withdrawReq);
 
 
     /**
@@ -38,7 +38,7 @@ public interface AccountTradeFacade {
      * @param transferReq 转账请求
      * @return 返回结果
      */
-    AccountResult transfer(TransferReq transferReq);
+    BaseResult transfer(TransferReq transferReq);
 
     /**
      * 存款方法
@@ -49,5 +49,5 @@ public interface AccountTradeFacade {
      * @param depositReq 存款请求
      * @return 返回结果
      */
-    AccountResult deposit(DepositReq depositReq);
+    BaseResult deposit(DepositReq depositReq);
 }

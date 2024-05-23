@@ -5,15 +5,14 @@
 package com.xushicao.accounting.dao.entity;
 
 /**
+ * 账户修改记录表实体类
+ *
  * @author Shichao.xu
  * @version $ AccountChangeLogDO, V0.1 2024/4/18 9:56 Shichao.xu Exp $
  */
 
 import java.util.Date;
 
-/**
- * 账户修改记录表实体类
- */
 public class AccountChangeLogDO {
 
     /**

@@ -9,6 +9,8 @@ import com.xushicao.accounting.facade.req.DepositReq;
 import com.xushicao.accounting.facade.req.TransferReq;
 import com.xushicao.accounting.facade.req.WithdrawReq;
 import com.xushicao.accounting.facade.result.AccountResult;
+import com.xushicao.accounting.facade.result.BaseResult;
+import com.xushicao.accounting.facade.result.DepositResult;
 import com.xushicao.accounting.service.AccountService;
 import com.xushicao.accounting.service.DepositService;
 import com.xushicao.accounting.service.TransferService;
@@ -17,6 +19,7 @@ import com.xushicao.accounting.template.TradeCallBack;
 import com.xushicao.accounting.template.TradeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -77,7 +80,7 @@ public class AccountTradeFacadeImpl implements AccountTradeFacade {
 
             @Override
             public void doTrade() {
-                withdrawService.withdraw(withdrawReq);
+                result.setTransInfo(withdrawService.withdraw(withdrawReq));
             }
         });
         return result;
@@ -91,7 +94,7 @@ public class AccountTradeFacadeImpl implements AccountTradeFacade {
      */
     @Override
     @PostMapping("transfer")
-    public AccountResult transfer(TransferReq transferReq) {
+    public BaseResult transfer(TransferReq transferReq) {
 
         final AccountResult result = new AccountResult();
 
@@ -106,7 +109,7 @@ public class AccountTradeFacadeImpl implements AccountTradeFacade {
 
             @Override
             public void doTrade() {
-                transferService.transfer(transferReq);
+                result.setTransInfo(transferService.transfer(transferReq));
             }
         });
 
@@ -121,8 +124,8 @@ public class AccountTradeFacadeImpl implements AccountTradeFacade {
      */
     @Override
     @PostMapping("deposit")
-    public AccountResult deposit(DepositReq depositReq) {
-        final AccountResult result = new AccountResult();
+    public BaseResult deposit(@RequestBody DepositReq depositReq) {
+        final BaseResult result = new DepositResult();
         TradeTemplate.trade(result, new TradeCallBack() {
             @Override
             public void checkParameter() {
@@ -133,7 +136,7 @@ public class AccountTradeFacadeImpl implements AccountTradeFacade {
 
             @Override
             public void doTrade() {
-                depositService.deposit(depositReq);
+                result.setTransInfo(depositService.deposit(depositReq));
             }
         });
         return result;

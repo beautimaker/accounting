@@ -6,6 +6,7 @@ package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.facade.req.DepositReq;
 import com.xushicao.accounting.facade.req.TransferReq;
+import com.xushicao.accounting.service.Impl.BaseService;
 
 /**
  * 转账服务接口
@@ -21,5 +22,5 @@ public interface TransferService {
      *
      * @param transferReq 转账请求
      */
-    void transfer(TransferReq transferReq);
+    BaseService.TransInfo transfer(TransferReq transferReq);
 }

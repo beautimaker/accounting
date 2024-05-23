@@ -4,11 +4,13 @@
  */
 package com.xushicao.accounting.service;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.xushicao.accounting.facade.AccountTradeFacade;
 import com.xushicao.accounting.facade.req.DepositReq;
 import com.xushicao.accounting.facade.req.TransferReq;
 import com.xushicao.accounting.facade.req.WithdrawReq;
 import com.xushicao.accounting.facade.result.AccountResult;
+import com.xushicao.accounting.facade.result.BaseResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,14 +33,13 @@ public class AccountTradeFacadeNormalTest {
 
     @Test
     void testWithdraw() {
-        AccountResult result;
+        BaseResult result;
         String accountNo = "20000110239156";
         WithdrawReq depositReq = new WithdrawReq();
         depositReq.setOperatorID("760479708");
-        depositReq.setOrderNo("001");
+        depositReq.setOrderNo("003");
         depositReq.setReconInst("苏州银行");
         depositReq.setOutDate(LocalDateTime.now());
-        depositReq.setTransDate(LocalDate.now());
         depositReq.setTransDT(LocalDateTime.now());
         depositReq.setTransCode("DEP");
         depositReq.setSubTransCode("01");
@@ -53,15 +54,14 @@ public class AccountTradeFacadeNormalTest {
 
     @Test
     void testTransfer() {
-        AccountResult result;
+        BaseResult result;
         TransferReq depositReq = new TransferReq();
         String accountFromNo = "20000110238156";
         String accountToNo = "20000110239156";
         depositReq.setOperatorID("760479708");
-        depositReq.setOrderNo("001");
+        depositReq.setOrderNo("004");
         depositReq.setReconInst("苏州银行");
         depositReq.setOutDate(LocalDateTime.now());
-        depositReq.setTransDate(LocalDate.now());
         depositReq.setTransDT(LocalDateTime.now());
         depositReq.setTransCode("DEP");
         depositReq.setSubTransCode("01");
@@ -79,25 +79,27 @@ public class AccountTradeFacadeNormalTest {
         DepositReq depositReq = new DepositReq();
         String accountNo = null;
         depositReq.setAmount(100);
-        AccountResult result = null;
+        BaseResult result = null;
         depositReq.setOperatorID("760479708");
         depositReq.setOrderNo("001");
         depositReq.setReconInst("苏州银行");
-        depositReq.setOutDate(LocalDateTime.now());
-        depositReq.setTransDate(LocalDate.now());
         depositReq.setTransDT(LocalDateTime.now());
         depositReq.setTransCode("DEP");
         depositReq.setSubTransCode("01");
         depositReq.setCurrency("156");
+        depositReq.setOutDate(LocalDateTime.now());
+        System.out.println(depositReq.getOutDate());
         //case1:个人账户存款
         depositReq.setAccountNo("20000110235156");
         result = accountTradeFacade.deposit(depositReq);
         Assert.isTrue(result.isSuccess(), "调用服务结果返回失败");
-
+        Assert.notNull(result.getTransInfo().getID(), "返回订单id失败");
         //case2;企业账户存款
         depositReq.setAccountNo("20000210232156");
+        depositReq.setOrderNo("002");
         result = accountTradeFacade.deposit(depositReq);
         Assert.isTrue(result.isSuccess(), "调用服务结果返回失败");
+        Assert.notNull(result.getTransInfo().getID(), "返回订单id失败");
 
     }
 

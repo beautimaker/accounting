@@ -4,7 +4,8 @@
  */
 package com.xushicao.accounting.model;
 
-import com.xushicao.accounting.service.Impl.BaseService;
+
+import java.time.LocalDateTime;
 
 /**
  * 账户业务类
@@ -17,24 +18,37 @@ public abstract class Account {
     /**
      * 账号
      */
-    String accountNo;
+    protected String accountNo;
 
     /**
      * 余额
      */
-    long balance;
+    protected long balance;
 
     /**
-     * 上期余额
+     * 交易时间
      */
-    long prevBalance;
+    protected LocalDateTime transDT;
 
-    public long getPrevBalance() {
-        return prevBalance;
+    /**
+     * 最后记账时间
+     */
+    protected LocalDateTime lastTransTime;
+
+    public LocalDateTime getLastTransTime() {
+        return lastTransTime;
     }
 
-    public void setPrevBalance(long prevBalance) {
-        this.prevBalance = prevBalance;
+    public void setLastTransTime(LocalDateTime lastTransTime) {
+        this.lastTransTime = lastTransTime;
+    }
+
+    public LocalDateTime getTransDT() {
+        return transDT;
+    }
+
+    public void setTransDT(LocalDateTime transDT) {
+        this.transDT = transDT;
     }
 
     public abstract void credit(long amount);

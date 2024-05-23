@@ -109,6 +109,15 @@ public class AccountLogDO {
      */
     private LocalDateTime gmtModified;
 
+    private Boolean condition;
+
+    public Boolean getCondition() {
+        return condition;
+    }
+
+    public void setCondition(Boolean condition) {
+        this.condition = condition;
+    }
 
     public String getId() {
         return id;

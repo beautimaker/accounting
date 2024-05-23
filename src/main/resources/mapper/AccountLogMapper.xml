@@ -3,10 +3,10 @@
 <mapper namespace="com.xushicao.accounting.dao.mapper.AccountLogMapper">
     <insert id="insert">
         insert into account_log (id, account_no, other_account_no, trans_amount, balance, currrncy, trans_code,
-                                 sub_trans_code, trans_date, trans_dt, out_date, order_no, recon_inst
+                                 sub_trans_code, trans_dt, out_date, order_no, recon_inst
             , operator_id, gmt_create)
         values (#{id}, #{accountNo}, #{otherAccountNo}, #{transAmount}, #{balance}, #{currency}, #{transCode},
-                #{subTransCode}, #{transDate}, #{transDT}, #{outDate}, #{orderNo}, #{reconInst}, #{operatorID}
+                #{subTransCode}, #{transDT}, #{outDate}, #{orderNo}, #{reconInst}, #{operatorID}
                    , NOW())
     </insert>
 </mapper>

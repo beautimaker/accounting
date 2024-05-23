@@ -17,32 +17,27 @@ public abstract class TransReq {
     /**
      * 金额数
      */
-    private long amount;
+    protected long amount;
 
     /**
      * 操作员ID
      */
-    private String operatorID;
+    protected String operatorID;
 
     /**
      * 订单号
      */
-    private String orderNo;
+    protected String orderNo;
 
     /**
      * 核算机构
      */
-    private String reconInst;
-
-    /**
-     * 交易日期
-     */
-    private LocalDate transDate;
+    protected String reconInst;
 
     /**
      * 交易时间
      */
-    private LocalDateTime transDT;
+    protected LocalDateTime transDT;
 
     /**
      * 交易代码
@@ -50,7 +45,7 @@ public abstract class TransReq {
      * WDL-取款
      * XFR-转账
      */
-    private String TransCode;
+    protected String TransCode;
 
     /**
      * 交易子代码
@@ -58,17 +53,18 @@ public abstract class TransReq {
      * 02-支票存款，支票取款，跨行转账
      * 03-电子转账存款，ATM取款，境外转账
      */
-    private String subTransCode;
+    protected String subTransCode;
 
     /**
      * 外部业务时间
      */
-    private LocalDateTime outDate;
+    protected LocalDateTime outDate;
+
 
     /**
      * 币种
      */
-    private String currency;
+    protected String currency;
 
     public long getAmount() {
         return amount;
@@ -100,14 +96,6 @@ public abstract class TransReq {
 
     public void setReconInst(String reconInst) {
         this.reconInst = reconInst;
-    }
-
-    public LocalDate getTransDate() {
-        return transDate;
-    }
-
-    public void setTransDate(LocalDate transDate) {
-        this.transDate = transDate;
     }
 
     public LocalDateTime getTransDT() {

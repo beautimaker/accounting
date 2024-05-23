@@ -2,11 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xushicao.accounting.dao.mapper.TransLogMapper">
     <insert id="insert">
-        insert into trans_log (id, debit_account_no, credit_account_no, trans_amount, currrncy, trans_code,
-                               sub_trans_code, trans_date, trans_dt, out_date, order_no, recon_inst
+
+        insert into trans_info (id, debit_account_no, credit_account_no, trans_amount, currrncy, trans_code,
+                                sub_trans_code, trans_dt, out_date, order_no, recon_inst
             , operator_id, gmt_create)
         values (#{id}, #{debitAccountNo}, #{creditAccountNo}, #{transAmount}, #{currency}, #{transCode},
-                #{subTransCode}, #{transDate}, #{transDT}, #{outDate}, #{orderNo}, #{reconInst}, #{operatorID}
+                #{subTransCode}, #{transDT}, #{outDate}, #{orderNo}, #{reconInst}, #{operatorID}
                    , NOW())
     </insert>
+
+    <select id="select">
+        select id
+        from trans_info
+        where order_no = #{orderNo}
+    </select>
 </mapper>

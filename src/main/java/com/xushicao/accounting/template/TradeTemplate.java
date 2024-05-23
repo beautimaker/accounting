@@ -5,6 +5,7 @@
 package com.xushicao.accounting.template;
 
 import com.xushicao.accounting.facade.result.AccountResult;
+import com.xushicao.accounting.facade.result.BaseResult;
 import com.xushicao.accounting.model.enums.AccountingErrDtlEnum;
 import com.xushicao.accounting.model.enums.AccountingErrScenarioEnum;
 import com.xushicao.accounting.model.exception.AccountingException;
@@ -32,7 +33,7 @@ public class TradeTemplate extends AbstractTemplate {
      * @param result   返回结果
      * @param callBcak 回调接口
      */
-    public static void trade(AccountResult result, TradeCallBack callBcak) {
+    public static void trade(BaseResult result, TradeCallBack callBcak) {
         try {
             callBcak.checkParameter();
             callBcak.doTrade();

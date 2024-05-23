@@ -6,12 +6,13 @@
         <result property="accountName" column="account_name"/>
         <result column="account_type" property="accountType"/>
         <result column="balance_direction" property="direction"/>
+        <result column="last_trans_time" property="lastTransTime"/>
     </resultMap>
     <insert id="insert">
         insert into account (account_no, account_name, account_type, status, balance, create_time,
-                             currency)
+                             currency, balance_direction, last_trans_time)
         values (#{accountNo}, #{accountName}, #{accountType}, #{status}, #{balance}, now(),
-                #{currency})
+                #{currency}, #{direction}, #{lastTransTime})
     </insert>
 
     <select id="select" resultMap="accountResultMap">
@@ -24,9 +25,9 @@
         select *
         from account
         where account_no = #{accountNo} for
-        update NOWAIT
-    </select>
+        update;
 
+    </select>
     <update id="update">
         update account
         set status=#{status},
@@ -36,11 +37,25 @@
 
     <update id="updateBalance">
         update account
-        set balance=#{balance},
-            prev_balance=#{prevBalance},
-            prev_trans_date=now(),
-            update_time=now()
+        set
+        <if test="days>0">
+            prev_balance=balance,
+            prev_trans_date=subdate(now(), interval 1 day),
+        </if>
+        balance = #{balance},
+        last_trans_time =#{transDT},
+        update_time = now()
         where account_no = #{accountNo};
     </update>
+
+    <select id="selectPage" resultType="AccountDO">
+        SELECT *
+        FROM account
+        limit #{pageSize} OFFSET#{pageNum}
+    </select>
+
+    <select id="selectNow" resultType="java.time.LocalDateTime">
+        select now();
+    </select>
 
 </mapper>

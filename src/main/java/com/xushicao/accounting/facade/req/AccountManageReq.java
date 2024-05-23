@@ -62,6 +62,20 @@ public class AccountManageReq {
      */
     private String relationInstId;
 
+    /**
+     * 余额方向
+     * C-贷方
+     * D-借方
+     */
+    private String direction;
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 
     public String getTitleCode() {
         return titleCode;

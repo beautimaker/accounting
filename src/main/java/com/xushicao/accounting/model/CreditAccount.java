@@ -9,6 +9,8 @@ import com.xushicao.accounting.dao.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Shichao.xu
  * @version $ CreditAccount, V0.1 2024/5/11 16:51 Shichao.xu Exp $
@@ -23,9 +25,11 @@ public class CreditAccount extends Account {
      * @param accountNo 账号
      * @param balance   余额
      */
-    public CreditAccount(String accountNo, long balance) {
+    public CreditAccount(String accountNo, long balance, LocalDateTime transDT, LocalDateTime lastTransTime) {
         this.accountNo = accountNo;
         this.balance = balance;
+        this.transDT = transDT;
+        this.lastTransTime = lastTransTime;
     }
 
     /**
@@ -33,9 +37,7 @@ public class CreditAccount extends Account {
      */
     @Override
     public void credit(long amount) {
-        prevBalance = balance;
         balance = balance + amount;
-
     }
 
     /**
@@ -43,7 +45,6 @@ public class CreditAccount extends Account {
      */
     @Override
     public void debit(long amount) {
-        prevBalance = balance;
         balance = balance - amount;
     }
 }

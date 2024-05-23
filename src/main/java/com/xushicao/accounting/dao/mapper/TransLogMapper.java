@@ -17,6 +17,19 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TransLogMapper {
 
+    /**
+     * 插入方法
+     *
+     * @param transLogDO 交易记录实体对象
+     */
     void insert(TransLogDO transLogDO);
+
+    /**
+     * 查询方法
+     *
+     * @param orderNo 订单号
+     */
+    String select(String orderNo);
+
 
 }

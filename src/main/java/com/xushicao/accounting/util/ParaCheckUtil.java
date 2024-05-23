@@ -146,12 +146,9 @@ public class ParaCheckUtil {
 
     public static void checkTransParams(TransReq transReq) {
         checkParamNotNull(transReq.getAmount(), ACCOUNT_AMOUNT);
-        checkParamNotNull(transReq.getAmount(), ACCOUNT_AMOUNT);
         checkParaNotBlank(transReq.getOperatorID(), ACCOUNT_OPERATOR_ID);
         checkParaNotBlank(transReq.getOrderNo(), ACCOUNT_ORDER_NO);
         checkParaNotBlank(transReq.getReconInst(), RECON_INST);
-        checkParamNotNull(transReq.getTransDate(), TRANS_DATE);
-        checkParamNotNull(transReq.getTransDT(), TRANS_D_T);
         checkParaNotBlank(transReq.getTransCode(), TRANS_CODE);
         //添加参数是否匹配
         checkParaNotBlank(transReq.getSubTransCode(), SUB_TRANS_CODE);

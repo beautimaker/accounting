@@ -27,6 +27,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 /**
  * 通用服务基类
@@ -72,7 +73,7 @@ public class BaseService {
     /**
      * 交易信息内部类
      */
-    protected class TransInfo {
+    public class TransInfo {
         /**
          * 借方对应账户账号
          */
@@ -135,6 +136,9 @@ public class BaseService {
          */
         private String currency;
 
+
+        private String ID;
+
         public TransInfo(DepositReq depositReq) {
             this.creditAccountNo = depositReq.getAccountNo();
             this.debitAccountNo = matchTotalAccount(depositReq.getAccountNo());
@@ -142,8 +146,11 @@ public class BaseService {
             this.operatorID = depositReq.getOperatorID();
             this.orderNo = depositReq.getOrderNo();
             this.reconInst = depositReq.getReconInst();
-            this.transDate = depositReq.getTransDate();
-            this.transDT = depositReq.getTransDT();
+            if (depositReq.getTransDT() != null) {
+                this.transDT = depositReq.getTransDT();
+            } else {
+                this.transDT = accountMapper.selectNow();
+            }
             this.transCode = depositReq.getTransCode();
             this.subTransCode = depositReq.getSubTransCode();
             this.outDate = depositReq.getOutDate();
@@ -157,8 +164,11 @@ public class BaseService {
             this.operatorID = withdrawReq.getOperatorID();
             this.orderNo = withdrawReq.getOrderNo();
             this.reconInst = withdrawReq.getAccountNo();
-            this.transDate = withdrawReq.getTransDate();
-            this.transDT = withdrawReq.getTransDT();
+            if (withdrawReq.getTransDT() != null) {
+                this.transDT = withdrawReq.getTransDT();
+            } else {
+                this.transDT = accountMapper.selectNow();
+            }
             this.transCode = withdrawReq.getTransCode();
             this.subTransCode = withdrawReq.getSubTransCode();
             this.outDate = withdrawReq.getOutDate();
@@ -172,8 +182,11 @@ public class BaseService {
             this.operatorID = transferReq.getOperatorID();
             this.orderNo = transferReq.getOrderNo();
             this.reconInst = transferReq.getReconInst();
-            this.transDate = transferReq.getTransDate();
-            this.transDT = transferReq.getTransDT();
+            if (transferReq.getTransDT() != null) {
+                this.transDT = transferReq.getTransDT();
+            } else {
+                this.transDT = accountMapper.selectNow();
+            }
             this.transCode = transferReq.getTransCode();
             this.subTransCode = transferReq.getSubTransCode();
             this.outDate = transferReq.getOutDate();
@@ -204,13 +217,21 @@ public class BaseService {
         public void setAmount(long amount) {
             this.amount = amount;
         }
+
+        public String getID() {
+            return ID;
+        }
+
+        public void setID(String ID) {
+            this.ID = ID;
+        }
     }
 
 
     /**
      * 交易服务方法
      */
-    protected void tranService(TransInfo transInfo) {
+    public void transService(TransInfo transInfo) {
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
             protected void doInTransactionWithoutResult(TransactionStatus status) {
@@ -220,36 +241,39 @@ public class BaseService {
                 AccountDO creditAccountDO = accountDOs[0];
                 AccountDO debitAccountDO = accountDOs[1];
 
+
                 //生成账户工厂
                 Factory accountFactory = new Factory();
 
                 //贷方对应账户
                 Account creditAccount = accountFactory.create(creditAccountDO.getDirection(), creditAccountDO.getAccountNo()
-                        , creditAccountDO.getBalance());
+                        , creditAccountDO.getBalance(), transInfo.transDT, creditAccountDO.getLastTransTime());
 
                 //借方对应账户
                 Account debitAccount = accountFactory.create(debitAccountDO.getDirection(), debitAccountDO.getAccountNo(),
-                        debitAccountDO.getBalance());
+                        debitAccountDO.getBalance(), transInfo.transDT, debitAccountDO.getLastTransTime());
 
                 //实现借贷双方对应账户操作
                 creditAccount.credit(transInfo.amount);
                 debitAccount.debit(transInfo.amount);
 
                 //更新数据库
-                accountMapper.updateBalance(creditAccount.getAccountNo(), creditAccount.getBalance(),
-                        creditAccount.getPrevBalance());
-                accountMapper.updateBalance(debitAccount.getAccountNo(), debitAccount.getBalance(),
-                        debitAccount.getPrevBalance());
+                long daysCredit = creditAccount.getTransDT().until(creditAccount.getLastTransTime(), ChronoUnit.DAYS);
+                long daysDebit = debitAccount.getTransDT().until(debitAccount.getLastTransTime(), ChronoUnit.DAYS);
+                accountMapper.updateBalance(creditAccount.getAccountNo(), creditAccount.getBalance(), creditAccount.
+                        getTransDT(), daysCredit);
+                accountMapper.updateBalance(debitAccount.getAccountNo(), debitAccount.getBalance(), debitAccount.
+                        getTransDT(), daysDebit);
+
 
                 //生成交易记录和账户变动记录
                 transLogMapper.insert(buildTransLog(transInfo));
                 accountLogMapper.insert(buildAccountLog(creditAccount, transInfo));
                 accountLogMapper.insert(buildAccountLog(debitAccount, transInfo));
 
-
+                transInfo.ID = transLogMapper.select(transInfo.orderNo);
             }
         });
-
     }
 
     /**
@@ -270,14 +294,14 @@ public class BaseService {
      *
      * @param account   业务账户对象
      * @param transInfo 交易信息对象
-     * @return
+     * @return 账户实体对象
      */
     private AccountLogDO buildAccountLog(Account account, TransInfo transInfo) {
         AccountLogDO accountLogDO = new AccountLogDO();
         String accountNo = account.getAccountNo();
         String otherAccountNo = (accountNo.equals(transInfo.getCreditAccountNo()) ? transInfo.debitAccountNo :
                 transInfo.creditAccountNo);
-        
+
         accountLogDO.setAccountNo(accountNo);
         accountLogDO.setOtherAccountNo(otherAccountNo);
         accountLogDO.setTransAmount(transInfo.amount);
@@ -289,8 +313,12 @@ public class BaseService {
         accountLogDO.setId(Long.toString(sequenceMapper.getNextVal("translog_seq")));
         accountLogDO.setCurrency(transInfo.currency);
         accountLogDO.setBalance(account.getBalance());
-        accountLogDO.setTransDT(transInfo.transDT);
-        accountLogDO.setTransDate(transInfo.transDate);
+        if (transInfo.transDT == null) {
+            accountLogDO.setCondition(true);
+        } else {
+            accountLogDO.setCondition(false);
+            accountLogDO.setTransDT(transInfo.transDT);
+        }
         accountLogDO.setOutDate(transInfo.outDate);
 
         return accountLogDO;
@@ -314,8 +342,12 @@ public class BaseService {
         transLogDO.setOrderNo(transInfo.orderNo);
         transLogDO.setId(Long.toString(sequenceMapper.getNextVal("translog_seq")));
         transLogDO.setCurrency(transInfo.currency);
-        transLogDO.setTransDate(transInfo.transDate);
-        transLogDO.setTransDT(transInfo.transDT);
+        if (transInfo.transDT == null) {
+            transLogDO.setCondition(true);
+        } else {
+            transLogDO.setCondition(false);
+            transLogDO.setTransDT(transInfo.transDT);
+        }
         transLogDO.setOutDate(transInfo.outDate);
 
         return transLogDO;

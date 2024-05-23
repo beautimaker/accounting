@@ -30,7 +30,7 @@ public class WithdrawServiceImlp extends BaseService implements WithdrawService 
      * @param withdrawReq 交易请求
      */
     @Override
-    public void withdraw(WithdrawReq withdrawReq) {
+    public TransInfo withdraw(WithdrawReq withdrawReq) {
 
         //打印日志
         LOGGER.info("收到用户存款请求。账号：{}，存款：{}", withdrawReq.getAccountNo(), withdrawReq.getAmount());
@@ -40,9 +40,11 @@ public class WithdrawServiceImlp extends BaseService implements WithdrawService 
         BaseService.TransInfo transInfo = new TransInfo(withdrawReq);
 
         //完成交易
-        tranService(transInfo);
+        transService(transInfo);
 
         //打印日志
         LOGGER.info("用户存款请求处理结束。账号：{}，存款：{}", withdrawReq.getAccountNo(), withdrawReq.getAmount());
+
+        return transInfo;
     }
 }

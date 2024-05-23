@@ -5,6 +5,7 @@
 package com.xushicao.accounting.service;
 
 import com.xushicao.accounting.facade.req.WithdrawReq;
+import com.xushicao.accounting.service.Impl.BaseService;
 
 /**
  * 取款服务接口
@@ -21,5 +22,5 @@ public interface WithdrawService {
      *
      * @param withdrawReq 交易请求
      */
-    void withdraw(WithdrawReq withdrawReq);
+    BaseService.TransInfo withdraw(WithdrawReq withdrawReq);
 }

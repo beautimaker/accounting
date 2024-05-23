@@ -7,6 +7,7 @@ package com.xushicao.accounting.dao.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.function.BinaryOperator;
 
 /**
  * 交易记录表实体类
@@ -106,6 +107,19 @@ public class TransLogDO {
      * 修改时间
      */
     private LocalDateTime gmtModified;
+
+    /**
+     * 插入条件
+     */
+    private Boolean condition;
+
+    public Boolean getCondition() {
+        return condition;
+    }
+
+    public void setCondition(Boolean condition) {
+        this.condition = condition;
+    }
 
     public String getId() {
         return id;

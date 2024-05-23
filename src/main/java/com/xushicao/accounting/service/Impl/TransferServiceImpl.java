@@ -37,7 +37,7 @@ public class TransferServiceImpl extends BaseService implements TransferService 
      * @param transferReq 交易请求
      */
     @Override
-    public void transfer(TransferReq transferReq) {
+    public TransInfo transfer(TransferReq transferReq) {
 
         LOGGER.info("收到用户转账请求：转出账户{} 转入账户{}", transferReq.getAccountFromNo(), transferReq.getAccountToNo());
 
@@ -45,10 +45,12 @@ public class TransferServiceImpl extends BaseService implements TransferService 
         TransInfo transInfo = new TransInfo(transferReq);
 
         //完成交易
-        tranService(transInfo);
+        transService(transInfo);
 
 
         LOGGER.info("用户转账请求处理结束：转出账户{} 转入账户{}", transferReq.getAccountFromNo(), transferReq.getAccountToNo());
+
+        return transInfo;
     }
 
 }

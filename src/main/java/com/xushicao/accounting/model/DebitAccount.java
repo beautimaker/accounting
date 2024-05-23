@@ -9,6 +9,8 @@ import com.xushicao.accounting.facade.req.DepositReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Shichao.xu
  * @version $ DebitAccount, V0.1 2024/5/11 16:54 Shichao.xu Exp $
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Service;
 public class DebitAccount extends Account {
 
 
-    public DebitAccount(String accountNo, long balance) {
+    public DebitAccount(String accountNo, long balance, LocalDateTime transDT, LocalDateTime lastTransTime) {
         this.accountNo = accountNo;
         this.balance = balance;
+        this.transDT = transDT;
+        this.lastTransTime = lastTransTime;
     }
 
 
@@ -29,7 +33,6 @@ public class DebitAccount extends Account {
      */
     @Override
     public void credit(long amount) {
-        prevBalance = balance;
         balance = balance - amount;
 
     }
@@ -41,7 +44,6 @@ public class DebitAccount extends Account {
      */
     @Override
     public void debit(long amount) {
-        prevBalance = balance;
         balance = balance + amount;
     }
 

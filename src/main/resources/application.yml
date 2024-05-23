@@ -8,6 +8,7 @@ spring:
     password: 1379Xushichao$
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.xushicao.accounting.dao.entity
@@ -16,5 +17,7 @@ Accounting:
   logging:
     home: /logs/Accounting
     level: INFO
+
+
 
 

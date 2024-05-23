@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -40,6 +41,12 @@ public class AccountServiceImpl extends BaseService implements AccountService {
      */
     @Autowired
     private SequenceMapper sequenceMapper;
+
+    /**
+     *
+     */
+    @Autowired
+    private AccountDailyMapper accountDailyMapper;
 
     /**
      * 内部户扩展表映射接口
@@ -75,10 +82,11 @@ public class AccountServiceImpl extends BaseService implements AccountService {
 
         // 2、生成账号
         String accountNo = getAccountNo(accountManageReq);
-
         //创建数据对象
-
         AccountDO accountDO = buildAccount(accountNo, accountManageReq);
+
+        //创建记账记录实体对象
+        AccountDailyDO accountDailyDO = buildAccountDailyDO(accountNo);
 
         //执行数据库操作
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -90,6 +98,7 @@ public class AccountServiceImpl extends BaseService implements AccountService {
                     innerAccountInfoMapper.insert(innerAccountInfoDO);
                 }
                 accountMapper.insert(accountDO);
+                accountDailyMapper.insert(accountDailyDO);
             }
         });
         LOGGER.info("用户开户请求处理结束:{}", accountManageReq);
@@ -191,6 +200,7 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         accountdo.setStatus("N");
         accountdo.setBalance(0);
         accountdo.setCurrency(accountManageReq.getCurrency());
+        accountdo.setDirection(accountManageReq.getDirection());
         return accountdo;
 
     }
@@ -214,6 +224,22 @@ public class AccountServiceImpl extends BaseService implements AccountService {
 
         return innerAccountInfoDO;
     }
+
+
+    /**
+     * 生成记账表实体对象
+     *
+     * @param accountNO 账号
+     * @return 记账实体对象
+     */
+    private AccountDailyDO buildAccountDailyDO(String accountNO) {
+        AccountDailyDO accountDailyDO = new AccountDailyDO();
+        accountDailyDO.setAccountNo(accountNO);
+        accountDailyDO.setClosingBalance(0);
+        accountDailyDO.setOpeningBalance(0);
+        return accountDailyDO;
+    }
+
 
     /**
      * 创建账户修改对象方法

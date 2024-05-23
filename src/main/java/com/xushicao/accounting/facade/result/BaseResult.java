@@ -5,6 +5,7 @@
 package com.xushicao.accounting.facade.result;
 
 import com.xushicao.accounting.common.ErrorContext;
+import com.xushicao.accounting.service.Impl.BaseService;
 
 /**
  * 结果抽象基类
@@ -28,6 +29,11 @@ public abstract class BaseResult {
      */
     private boolean success = false;
 
+    /**
+     * 交易信息
+     */
+    private BaseService.TransInfo transInfo;
+
     public ErrorContext getErrorContext() {
         return errorContext;
     }
@@ -42,5 +48,13 @@ public abstract class BaseResult {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public BaseService.TransInfo getTransInfo() {
+        return transInfo;
+    }
+
+    public void setTransInfo(BaseService.TransInfo transInfo) {
+        this.transInfo = transInfo;
     }
 }

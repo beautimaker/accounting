@@ -6,6 +6,7 @@ package com.xushicao.accounting.dao.entity;
 
 import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -44,7 +45,7 @@ public class AccountDO {
     private long balance;
 
     /**
-     * 修改时间
+     * 最后记账时间
      */
     private LocalDateTime lastTransTime;
 
@@ -67,6 +68,32 @@ public class AccountDO {
      * 余额方向
      */
     private String direction;
+
+    /**
+     * 上期余额
+     */
+    private long prevBalance;
+
+    /**
+     * 上期交易日
+     */
+    private LocalDate prevTransDate;
+
+    public long getPrevBalance() {
+        return prevBalance;
+    }
+
+    public void setPrevBalance(long prevBalance) {
+        this.prevBalance = prevBalance;
+    }
+
+    public LocalDate getPrevTransDate() {
+        return prevTransDate;
+    }
+
+    public void setPrevTransDate(LocalDate prevTransDate) {
+        this.prevTransDate = prevTransDate;
+    }
 
     public String getDirection() {
         return direction;
@@ -114,10 +141,6 @@ public class AccountDO {
 
     public void setBalance(long balance) {
         this.balance = balance;
-    }
-
-    public LocalDateTime getLast_trans_time() {
-        return lastTransTime;
     }
 
     public String getCurrency() {

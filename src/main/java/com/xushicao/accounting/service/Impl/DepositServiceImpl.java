@@ -33,19 +33,21 @@ public class DepositServiceImpl extends BaseService implements DepositService {
      * 存款方法重写
      */
     @Override
-    public void deposit(DepositReq depositReq) {
+    public TransInfo deposit(DepositReq depositReq) {
 
         //打印日志
-        LOGGER.info("收到用户存款请求。账号：{}，存款：{}", depositReq.getOrderNo(), depositReq.getAmount());
+        LOGGER.info("收到用户存款请求。账号：{}，存款：{}", depositReq.getAccountNo(), depositReq.getAmount());
 
 
         //生成交易信息对象
         TransInfo transInfo = new TransInfo(depositReq);
 
         //完成交易
-        tranService(transInfo);
+        transService(transInfo);
 
         //打印日志
         LOGGER.info("用户存款请求处理结束。账号：{}，存款：{}", depositReq.getAccountNo(), depositReq.getAmount());
+
+        return transInfo;
     }
 }

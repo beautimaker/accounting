@@ -178,6 +178,7 @@ public class AccountServiceImpl extends BaseService implements AccountService {
         String accountType = accountManageReq.getAccountType();//获取账号类型
         String accountCurrency = accountManageReq.getCurrency();//获取账号币种
         String serialNo = Long.toString(sequenceMapper.getNextVal("account_seq")); //获取序列号sequenceMapper.getNextVal("my_sequence")
+        System.out.println(serialNo);
         String accountNo = "2000" + accountType + serialNo + accountCurrency;
         return accountNo;
 

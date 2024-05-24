@@ -7,13 +7,14 @@
     </insert>
 
     <update id="update">
-        update account_daily set account_no=#{accountNo},date=DATE_SUB(NOW(),INTERVAL 1 DAY)
-        ,opening_balance=closing_balance;
+        update account_daily set date=DATE_SUB(NOW(),INTERVAL 1 DAY)
+        ,opening_balance=closing_balance ,
         <if test="days>0">
-            update account_daily set closing_balance=#{balance}
+            closing_balance=#{balance} ,
         </if>
-        <if test="day=0">
-            update account_daily set closing_balance=#{prevBalance}
+        <if test="day==0">
+            closing_balance=#{prevBalance}
         </if>
+        where account_no=#{accountNo}
     </update>
 </mapper>

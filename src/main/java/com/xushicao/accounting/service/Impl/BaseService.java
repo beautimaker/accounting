@@ -264,8 +264,7 @@ public class BaseService {
                         getTransDT(), daysCredit);
                 accountMapper.updateBalance(debitAccount.getAccountNo(), debitAccount.getBalance(), debitAccount.
                         getTransDT(), daysDebit);
-
-
+                
                 //生成交易记录和账户变动记录
                 transLogMapper.insert(buildTransLog(transInfo));
                 accountLogMapper.insert(buildAccountLog(creditAccount, transInfo));

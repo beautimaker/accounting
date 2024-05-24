@@ -45,7 +45,6 @@ public class RecordBalance implements Job {
         int pageNum = 0;
         int pageSize = 100;
         List<AccountDO> accountDOS;
-        AccountDailyDO accountDailyDO = new AccountDailyDO();
         do {
             accountDOS = accountMapper.selectPage(pageNum, pageSize);
             for (AccountDO accountDO : accountDOS) {

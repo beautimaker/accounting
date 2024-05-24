@@ -12,7 +12,7 @@
         insert into account (account_no, account_name, account_type, status, balance, create_time,
                              currency, balance_direction, last_trans_time)
         values (#{accountNo}, #{accountName}, #{accountType}, #{status}, #{balance}, now(),
-                #{currency}, #{direction}, #{lastTransTime})
+                #{currency}, #{direction}, now())
     </insert>
 
     <select id="select" resultMap="accountResultMap">

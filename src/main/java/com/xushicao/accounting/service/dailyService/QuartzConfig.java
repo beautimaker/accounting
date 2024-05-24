@@ -36,7 +36,7 @@ public class QuartzConfig {
         CronTriggerFactoryBean triggerFactory = new CronTriggerFactoryBean();
         triggerFactory.setJobDetail(job);
         triggerFactory.setName("dailyTrigger");
-        triggerFactory.setCronExpression("0 30 0 * * ?");
+        triggerFactory.setCronExpression("0 30 1 * * ?");
         return triggerFactory;
     }
 
